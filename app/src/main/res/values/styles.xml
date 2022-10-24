@@ -1,0 +1,24 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+
+
+    <style name="tabLayout" parent="Widget.MaterialComponents.TabLayout">
+<!--        <item name="background">@drawable/bg_tablayout</item>-->
+        <item name="tabIndicator">@drawable/tab_indicator</item>
+<!--        <item name="tabPadding">8dp</item>-->
+        <item name="tabIndicatorAnimationMode">elastic</item>
+        <item name="tabIndicatorColor">@color/red</item>
+        <item name="tabMinWidth">70dp</item>
+        <item name="tabMode">auto</item>
+        <item name="tabIndicatorHeight">40dp</item>
+        <item name="tabTextAppearance">@style/tab_text</item>
+<!--        <item name="selectableItemBackground">@drawable/tab_indicator</item>-->
+        <item name="tabTextColor">@color/white</item>
+
+    </style>
+
+    <style name="tab_text" parent="@android:style/TextAppearance.Widget.TabWidget">
+        <item name="android:textSize">14sp</item>
+    </style>
+
+</resources>

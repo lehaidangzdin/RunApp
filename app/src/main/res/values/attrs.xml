@@ -1,0 +1,18 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <declare-styleable name="IndicatorProgressBar">
+        <!-- The color of the progressbar (not the progress)-->
+        <attr name="barColor" format="color" />
+        <!-- The color of the indicators on the progress bar (such as ads on YouTube)-->
+        <attr name="indicatorColor" format="color" />
+        <!-- The color of the progressed time/work of the progressbar-->
+        <attr name="progressColor" format="color" />
+        <!-- The initial progress value, a value from 0 to 1 -->
+        <attr name="progress" format="float" />
+        <attr name="indicatorThumbnailColor" format="color" />
+        <!-- The height of the progress bar, note that layout_height should be set to a larger
+        number so the onTouchEvent listener is more easy to trigger-->
+        <attr name="barHeight" format="float" />
+
+    </declare-styleable>
+</resources>

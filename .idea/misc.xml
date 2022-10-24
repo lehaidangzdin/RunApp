@@ -1,0 +1,34 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<project version="4">
+  <component name="DesignSurface">
+    <option name="filePathToZoomLevelMap">
+      <map>
+        <entry key="..\:/LE HAI DANG/Code/SMAC/RunApp2/app/src/main/res/drawable/bg_block_info.xml" value="0.1" />
+        <entry key="..\:/LE HAI DANG/Code/SMAC/RunApp2/app/src/main/res/drawable/bg_chart.xml" value="0.1005" />
+        <entry key="..\:/LE HAI DANG/Code/SMAC/RunApp2/app/src/main/res/drawable/bg_column.xml" value="0.1005" />
+        <entry key="..\:/LE HAI DANG/Code/SMAC/RunApp2/app/src/main/res/drawable/bg_column_touch.xml" value="0.1" />
+        <entry key="..\:/LE HAI DANG/Code/SMAC/RunApp2/app/src/main/res/drawable/bg_tablayout.xml" value="0.1" />
+        <entry key="..\:/LE HAI DANG/Code/SMAC/RunApp2/app/src/main/res/drawable/tab_indicator.xml" value="0.2155" />
+        <entry key="..\:/LE HAI DANG/Code/SMAC/RunApp2/app/src/main/res/drawable/text_bottom_nav.xml" value="0.1" />
+        <entry key="..\:/LE HAI DANG/Code/SMAC/RunApp2/app/src/main/res/layout/activity_main.xml" value="0.2" />
+        <entry key="..\:/LE HAI DANG/Code/SMAC/RunApp2/app/src/main/res/layout/activity_main2.xml" value="0.1675925925925926" />
+        <entry key="..\:/LE HAI DANG/Code/SMAC/RunApp2/app/src/main/res/layout/bg_chart.xml" value="0.1" />
+        <entry key="..\:/LE HAI DANG/Code/SMAC/RunApp2/app/src/main/res/layout/fragment_day.xml" value="0.1" />
+        <entry key="..\:/LE HAI DANG/Code/SMAC/RunApp2/app/src/main/res/layout/fragment_event.xml" value="0.1" />
+        <entry key="..\:/LE HAI DANG/Code/SMAC/RunApp2/app/src/main/res/layout/fragment_home.xml" value="0.2" />
+        <entry key="..\:/LE HAI DANG/Code/SMAC/RunApp2/app/src/main/res/layout/fragment_month.xml" value="0.27447916666666666" />
+        <entry key="..\:/LE HAI DANG/Code/SMAC/RunApp2/app/src/main/res/layout/fragment_week.xml" value="0.27447916666666666" />
+        <entry key="..\:/LE HAI DANG/Code/SMAC/RunApp2/app/src/main/res/layout/header.xml" value="0.4" />
+        <entry key="..\:/LE HAI DANG/Code/SMAC/RunApp2/app/src/main/res/layout/item_receive.xml" value="0.16" />
+        <entry key="..\:/LE HAI DANG/Code/SMAC/RunApp2/app/src/main/res/layout/my_marker.xml" value="0.264" />
+        <entry key="..\:/LE HAI DANG/Code/SMAC/RunApp2/app/src/main/res/menu/menu_bottom_nav.xml" value="0.1175925925925926" />
+      </map>
+    </option>
+  </component>
+  <component name="ProjectRootManager" version="2" languageLevel="JDK_11" default="true" project-jdk-name="Android Studio default JDK" project-jdk-type="JavaSDK">
+    <output url="file://$PROJECT_DIR$/build/classes" />
+  </component>
+  <component name="ProjectType">
+    <option name="id" value="Android" />
+  </component>
+</project>
