@@ -9,6 +9,7 @@ import com.google.android.material.tabs.TabLayoutMediator
 import com.lhd.runapp.R
 import com.lhd.runapp.adapter.ReceiveAdapter
 import com.lhd.runapp.adapter.TabLayoutAdapter
+import com.lhd.runapp.customviews.SpacesItemDecoration
 import com.lhd.runapp.databinding.FragmentHomeBinding
 import com.lhd.runapp.models.Receive
 
@@ -16,20 +17,20 @@ class HomeFragment : Fragment() {
 
 
     private lateinit var mBinding: FragmentHomeBinding
-    private var myAdapter= ReceiveAdapter(arrayListOf())
+    private var myAdapter = ReceiveAdapter(arrayListOf())
     private var lsReceive: ArrayList<Receive> = ArrayList()
 
     override fun onCreateView(
         inflater: LayoutInflater, container: ViewGroup?,
         savedInstanceState: Bundle?
-    ): View? {
+    ): View {
         mBinding = FragmentHomeBinding.inflate(inflater, container, false)
         return mBinding.root
     }
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
-        mBinding.mySeekBar.indicatorPositions = listOf(0F, 0.25F, 0.5F, 0.9F)
+        mBinding.mySeekBar.indicatorPositions = listOf(0F, 0.1F, 0.3F, 0.85F)
         mBinding.mySeekBar.indicatorText = listOf("0", "500", "1000", "4000")
         setupViewPager()
         setupTabLayout()
@@ -40,6 +41,7 @@ class HomeFragment : Fragment() {
     private fun setUpRcv() {
         mBinding.rcv.apply {
             adapter = myAdapter
+            addItemDecoration(SpacesItemDecoration(10))
             setHasFixedSize(true)
         }
     }

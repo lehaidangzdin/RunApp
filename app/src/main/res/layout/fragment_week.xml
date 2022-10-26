@@ -6,17 +6,17 @@
 
     </data>
 
-    <FrameLayout
+    <RelativeLayout
         android:layout_width="match_parent"
-        android:layout_height="match_parent"
-        android:background="@color/red"
-        tools:context=".fragment.fragChart.WeekFragment">
+        android:layout_height="wrap_content"
+        android:background="@color/black">
 
-        <!-- TODO: Update blank fragment layout -->
-        <TextView
+        <com.github.mikephil.charting.charts.BarChart
+            android:id="@+id/barChart"
             android:layout_width="match_parent"
-            android:layout_height="match_parent"
-            android:text="2" />
+            android:layout_height="@dimen/dimen_400"
+            android:layout_centerInParent="true"
+            android:paddingBottom="@dimen/dimen_8" />
 
-    </FrameLayout>
+    </RelativeLayout>
 </layout>

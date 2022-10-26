@@ -1,5 +1,6 @@
 <?xml version="1.0" encoding="utf-8"?>
 <layout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
     xmlns:tools="http://schemas.android.com/tools">
 
     <data>
@@ -9,14 +10,23 @@
     <RelativeLayout
         android:layout_width="match_parent"
         android:layout_height="match_parent"
+        android:background="@color/black"
+        android:padding="@dimen/dimen_8"
         tools:context=".MainActivity2">
 
-        <com.github.mikephil.charting.charts.BarChart
-            android:id="@+id/barChart"
-            android:layout_width="400dp"
-            android:layout_height="400dp"
-            android:layout_centerInParent="true" />
-
+        <com.lhd.runapp.customviews.MySeekBar
+            android:id="@+id/mySeekBar"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_centerVertical="true"
+            android:layout_marginHorizontal="@dimen/dimen_8"
+            android:layout_marginTop="-30dp"
+            android:foregroundGravity="center"
+            app:barColor="@color/bg_seekbar"
+            app:barHeight="20"
+            app:indicatorColor="@color/red"
+            app:progress="0.7"
+            app:progressColor="@color/red" />
 
     </RelativeLayout>
 </layout>

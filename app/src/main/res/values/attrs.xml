@@ -13,6 +13,6 @@
         <!-- The height of the progress bar, note that layout_height should be set to a larger
         number so the onTouchEvent listener is more easy to trigger-->
         <attr name="barHeight" format="float" />
-
     </declare-styleable>
+
 </resources>

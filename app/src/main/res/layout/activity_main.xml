@@ -14,6 +14,8 @@
         android:background="@color/black"
         android:orientation="vertical">
 
+        <include layout="@layout/header" />
+
         <FrameLayout
             android:id="@+id/frame"
             android:layout_width="match_parent"

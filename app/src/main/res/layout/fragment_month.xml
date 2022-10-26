@@ -1,22 +1,21 @@
 <?xml version="1.0" encoding="utf-8"?>
-<layout xmlns:android="http://schemas.android.com/apk/res/android"
-    xmlns:tools="http://schemas.android.com/tools">
+<layout xmlns:android="http://schemas.android.com/apk/res/android">
 
     <data>
 
     </data>
 
-    <FrameLayout
+    <RelativeLayout
         android:layout_width="match_parent"
-        android:layout_height="match_parent"
-        android:background="@color/teal_700"
-        tools:context=".fragment.fragChart.MonthFragment">
+        android:layout_height="wrap_content"
+        android:background="@color/black">
 
-        <!-- TODO: Update blank fragment layout -->
-        <TextView
+        <com.github.mikephil.charting.charts.BarChart
+            android:id="@+id/barChart"
             android:layout_width="match_parent"
-            android:layout_height="match_parent"
-            android:text="3" />
+            android:layout_height="@dimen/dimen_400"
+            android:layout_centerInParent="true"
+            android:paddingBottom="@dimen/dimen_8" />
 
-    </FrameLayout>
+    </RelativeLayout>
 </layout>

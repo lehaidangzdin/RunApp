@@ -22,7 +22,7 @@ class MyMarkerView(
 
     override fun refreshContent(e: Entry?, highlight: Highlight?) {
         try {
-            tvContent?.text = "${e?.y}"
+            tvContent?.text = "${e?.y?.toInt()}"
         } catch (e: IndexOutOfBoundsException) {
             Log.e("MyMarkerView", "refreshContent: ${e.message}")
         }
@@ -30,6 +30,6 @@ class MyMarkerView(
     }
 
     override fun getOffset(): MPPointF {
-        return MPPointF(-(width / 2f), (height.toFloat()))
+        return MPPointF(-(width / 2f), -height.toFloat())
     }
 }
