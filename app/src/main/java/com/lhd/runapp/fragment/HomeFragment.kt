@@ -53,7 +53,6 @@ class HomeFragment(private val goToReceive: HomeInterface) : Fragment() {
         })
     }
 
-
     private fun setUpRcv() {
         val managerLayout = FlexboxLayoutManager(activity)
         managerLayout.flexDirection = FlexDirection.ROW
@@ -62,7 +61,6 @@ class HomeFragment(private val goToReceive: HomeInterface) : Fragment() {
 
         mBinding.rcv.apply {
             adapter = myAdapter
-//            layoutManager = managerLayout
             setHasFixedSize(true)
         }
     }
@@ -148,8 +146,9 @@ class HomeFragment(private val goToReceive: HomeInterface) : Fragment() {
 
     private fun setupViewPager() {
         val adapter = activity?.let { TabLayoutAdapter(it) }
-        mBinding.viewPager.adapter = adapter
+        mBinding.viewPager.apply {
+            setAdapter(adapter)
+            isUserInputEnabled = false
+        }
     }
-
-
 }
