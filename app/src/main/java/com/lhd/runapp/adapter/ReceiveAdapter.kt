@@ -1,15 +1,17 @@
 package com.lhd.runapp.adapter
 
 import android.annotation.SuppressLint
-import android.util.Log
 import android.view.LayoutInflater
 import android.view.ViewGroup
 import androidx.recyclerview.widget.RecyclerView
+import com.google.android.flexbox.AlignItems
+import com.google.android.flexbox.FlexboxLayoutManager
 import com.lhd.runapp.databinding.ItemReceiveBinding
 import com.lhd.runapp.models.Receive
 
 class ReceiveAdapter(
-    private val lsReceive: ArrayList<Receive>
+    private val lsReceive: ArrayList<Receive>,
+    private val type: Int
 ) : RecyclerView.Adapter<ReceiveAdapter.MyViewHolder>() {
 
     private lateinit var listener: OnClickItem
@@ -20,7 +22,6 @@ class ReceiveAdapter(
         lsReceive.clear()
         lsReceive.addAll(list)
         notifyDataSetChanged()
-        Log.e("ADAPTER", "addData: ---------")
     }
 
     fun setOnClickListener(listener: OnClickItem) {
@@ -42,11 +43,16 @@ class ReceiveAdapter(
     override fun onBindViewHolder(holder: MyViewHolder, position: Int) {
         val currentMovie = lsReceive[position]
         holder.mBinding.item = currentMovie
-
+        val lp = holder.mBinding.itemReceive.layoutParams
+        if (lp is FlexboxLayoutManager.LayoutParams) {
+            lp.flexGrow = 1.0f
+            lp.alignSelf = AlignItems.FLEX_START
+        }
     }
 
     override fun getItemCount(): Int {
-        if (lsReceive.size > limit) return limit
+
+        if (type == 0 && lsReceive.size > limit) return limit
 
         return lsReceive.size
     }

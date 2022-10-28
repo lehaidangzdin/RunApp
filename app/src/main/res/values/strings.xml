@@ -7,12 +7,14 @@
     <!--    <string name="steps"><b>TODAY: 524/4000 steps</b></string>-->
     <string name="today">TODAY: </string>
     <string name="_4_000_steps">4.000 steps</string>
-    <string name="_500">500/</string>
+    <string name="_500"> 500/</string>
     <!--    -->
     <string name="day">Day</string>
     <string name="week">Week</string>
     <string name="month">Month</string>
     <string name="recent_achieved_badge">RECENT ACHIEVED BADGE</string>
     <string name="view_all"><u>View all</u></string>
+    <string name="month_challenge">Month Challenge</string>
+    <string name="_3_12_titles">3/12 Titles</string>
 
 </resources>

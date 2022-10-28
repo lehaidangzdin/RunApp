@@ -88,7 +88,7 @@
                     app:barColor="@color/bg_seekbar"
                     app:barHeight="20"
                     app:indicatorColor="@color/red"
-                    app:progress="0.5"
+                    app:progress="0.6"
                     app:progressColor="@color/red" />
             </RelativeLayout>
             <!--Tab layout-->
@@ -96,7 +96,7 @@
                 android:id="@+id/tabLayout"
                 style="@style/tabLayout"
                 android:layout_width="wrap_content"
-                android:layout_height="@dimen/dimen_40"
+                android:layout_height="@dimen/dimen_45"
                 android:layout_gravity="center_horizontal"
                 android:background="@drawable/bg_tablayout" />
 
@@ -111,7 +111,7 @@
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:layout_marginHorizontal="@dimen/dimen_12"
-                android:layout_marginVertical="@dimen/dimen_16"
+                android:layout_marginVertical="@dimen/dimen_20"
                 android:background="@drawable/bg_block_info"
                 android:orientation="vertical">
 
@@ -119,7 +119,7 @@
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
                     android:layout_marginTop="@dimen/dimen_8"
-                    android:paddingHorizontal="@dimen/dimen_8"
+                    android:paddingHorizontal="@dimen/dimen_10"
                     android:paddingVertical="@dimen/dimen_10">
 
                     <RelativeLayout
@@ -151,6 +151,7 @@
                         android:layout_height="wrap_content"
                         android:layout_alignParentEnd="true"
                         android:layout_centerInParent="true"
+                        android:id="@+id/tvViewAll"
                         android:text="@string/view_all"
                         android:textColor="@color/txtColor2"
                         android:textSize="16sp" />
@@ -160,15 +161,11 @@
                     android:id="@+id/rcv"
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
-                    android:layout_margin="@dimen/dimen_8"
-                    android:layerType="hardware"
-                    app:layoutManager="androidx.recyclerview.widget.GridLayoutManager"
-                    app:layout_behavior="@string/appbar_scrolling_view_behavior"
-                    app:spanCount="4" />
+                    app:spanCount="4"
+                    app:layoutManager="androidx.recyclerview.widget.StaggeredGridLayoutManager"
+                    android:layout_margin="@dimen/dimen_8" />
 
             </LinearLayout>
-
-
         </LinearLayout>
     </androidx.core.widget.NestedScrollView>
 </layout>
