@@ -4,37 +4,32 @@ import android.os.Bundle
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
-import androidx.databinding.DataBindingUtil
 import androidx.fragment.app.Fragment
 import com.github.mikephil.charting.data.BarEntry
-import com.lhd.runapp.R
 import com.lhd.runapp.customviews.SetupChart
 import com.lhd.runapp.databinding.FragmentMonthBinding
-import com.lhd.runapp.databinding.FragmentWeekBinding
 
 class MonthFragment : Fragment() {
 
-    private var mBinding: FragmentMonthBinding? = null
-    private val binding get() = mBinding!!
+    private lateinit var mBinding: FragmentMonthBinding
     private lateinit var barEntriesList: ArrayList<BarEntry>
     private val lsAxis: ArrayList<String> = ArrayList()
     override fun onCreateView(
         inflater: LayoutInflater, container: ViewGroup?,
         savedInstanceState: Bundle?
-    ): View? {
+    ): View {
         // Inflate the layout for this fragment
-        mBinding = DataBindingUtil.inflate(
-            inflater, R.layout.fragment_month, container, false
-        )
-        return binding.root
+        mBinding = FragmentMonthBinding.inflate(inflater, container, false)
+        return mBinding.root
     }
+
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
         val setUpChart =
             activity?.let {
                 SetupChart(
                     it.applicationContext,
-                    mBinding!!.barChart,
+                    mBinding.barChart,
                     barEntriesList,
                     lsAxis
                 )

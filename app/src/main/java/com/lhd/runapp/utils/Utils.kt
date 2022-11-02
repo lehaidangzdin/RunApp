@@ -12,7 +12,6 @@ object Utils {
      * resize image in drawable
      */
     fun resizeBitmap(bitmap: Bitmap, toWidth: Int, toHeight: Int): Bitmap {
-
         return Bitmap.createScaledBitmap(
             bitmap,
             convertDpToPixels(toWidth),

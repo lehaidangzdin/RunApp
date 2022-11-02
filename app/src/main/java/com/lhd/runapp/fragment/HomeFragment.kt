@@ -6,25 +6,22 @@ import android.view.View
 import android.view.ViewGroup
 import android.widget.Toast
 import androidx.fragment.app.Fragment
-import com.google.android.flexbox.AlignItems
-import com.google.android.flexbox.FlexDirection
-import com.google.android.flexbox.FlexboxLayoutManager
-import com.google.android.flexbox.JustifyContent
 import com.google.android.material.tabs.TabLayoutMediator
 import com.lhd.runapp.R
 import com.lhd.runapp.adapter.ReceiveAdapter
 import com.lhd.runapp.adapter.TabLayoutAdapter
 import com.lhd.runapp.customviews.MySeekBar
+import com.lhd.runapp.customviews.modelCustomView.ReceiveSeekbar
 import com.lhd.runapp.databinding.FragmentHomeBinding
 import com.lhd.runapp.interfacePresenter.HomeInterface
 import com.lhd.runapp.models.Receive
-
 
 class HomeFragment(private val goToReceive: HomeInterface) : Fragment() {
 
     private lateinit var mBinding: FragmentHomeBinding
     private var myAdapter = ReceiveAdapter(arrayListOf(), 0)
     private var lsReceive: ArrayList<Receive> = ArrayList()
+    private var lsIconReceive = ArrayList<ReceiveSeekbar>()
 
     override fun onCreateView(
         inflater: LayoutInflater, container: ViewGroup?,
@@ -36,33 +33,50 @@ class HomeFragment(private val goToReceive: HomeInterface) : Fragment() {
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
-        mBinding.mySeekBar.indicatorPositions = listOf(0F, 0.1F, 0.3F, 0.85F)
-        mBinding.mySeekBar.indicatorText = listOf("0", "500", "1000", "4000")
+        //
+        setupMySeekBar()
         setupViewPager()
         setupTabLayout()
         addLsReceive()
         setUpRcv()
 
-        mBinding.tvViewAll.setOnClickListener { _ ->
+        // listener
+        mBinding.tvViewAll.setOnClickListener {
             goToReceive.replaceReceive(ReceiveFragment())
         }
         mBinding.mySeekBar.setOnClickListener(object : MySeekBar.OnClickBitmapReceive {
             override fun clickItem(positionReceive: Int) {
-                Toast.makeText(activity, "Clicked $positionReceive", Toast.LENGTH_SHORT).show()
+                if (!lsIconReceive[positionReceive].disable) {
+                    lsIconReceive[positionReceive].disable = !lsIconReceive[positionReceive].disable
+                }
+                mBinding.mySeekBar.indicatorBitmapReceive = lsIconReceive
+                mBinding.mySeekBar.invalidate()
+
+                Toast.makeText(activity, "$positionReceive", Toast.LENGTH_SHORT).show()
             }
         })
     }
 
-    private fun setUpRcv() {
-        val managerLayout = FlexboxLayoutManager(activity)
-        managerLayout.flexDirection = FlexDirection.ROW
-        managerLayout.justifyContent = JustifyContent.FLEX_START
-        managerLayout.alignItems = AlignItems.FLEX_START
+    private fun setupMySeekBar() {
+        addIconReceive()
+        mBinding.mySeekBar.indicatorPositions = listOf(0F, 0.1F, 0.3F, 0.85F)
+        mBinding.mySeekBar.indicatorText = listOf("0", "500", "1000", "4000")
+        mBinding.mySeekBar.indicatorBitmapReceive = lsIconReceive
+    }
 
+
+    private fun setUpRcv() {
         mBinding.rcv.apply {
             adapter = myAdapter
             setHasFixedSize(true)
         }
+    }
+
+    private fun addIconReceive() {
+        lsIconReceive.add(ReceiveSeekbar(0, true))
+        lsIconReceive.add(ReceiveSeekbar(R.drawable.reiceve1, false))
+        lsIconReceive.add(ReceiveSeekbar(R.drawable.receive2, false))
+        lsIconReceive.add(ReceiveSeekbar(R.drawable.reiceve3, false))
     }
 
     private fun addLsReceive() {

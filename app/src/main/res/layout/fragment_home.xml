@@ -88,7 +88,7 @@
                     app:barColor="@color/bg_seekbar"
                     app:barHeight="20"
                     app:indicatorColor="@color/red"
-                    app:progress="0.6"
+                    app:progress="0.7"
                     app:progressColor="@color/red" />
             </RelativeLayout>
             <!--Tab layout-->

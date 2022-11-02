@@ -13,27 +13,16 @@ import com.github.mikephil.charting.model.GradientColor
 import com.lhd.runapp.R
 
 class SetupChart(
-    context: Context,
-    barChart: BarChart,
-    barEntriesList: ArrayList<BarEntry>,
-    lsAxis: ArrayList<String>
+    private val context: Context,
+    private val barChart: BarChart,
+    private val barEntriesList: ArrayList<BarEntry>,
+    private val lsAxis: ArrayList<String>
 ) {
-    private var context: Context
-    private var barChart: BarChart
     private lateinit var dataChart: BarData
     private lateinit var dataSet: BarDataSet
-    private var barEntriesList: ArrayList<BarEntry> = ArrayList()
-    private var lsAxis: ArrayList<String> = ArrayList()
 
-    init {
-        this.context = context
-        this.barChart = barChart
-        this.barEntriesList = barEntriesList
-        this.lsAxis = lsAxis
-    }
 
     fun setUp() {
-
         // set marker
         val mv = MyMarkerView(context, R.layout.my_marker)
         // gradient column
@@ -68,7 +57,6 @@ class SetupChart(
             marker = mv
             isDoubleTapToZoomEnabled = false
             renderer = myBarChartRender
-//            setBackgroundResource(R.drawable.bg_chart)
             setTouchEnabled(true)
             setScaleEnabled(false)
             setVisibleXRangeMaximum(7F)
@@ -96,27 +84,5 @@ class SetupChart(
             setDrawGridLines(false)
 
         }
-    }
-
-    private fun getBarChartData() {
-        barEntriesList = ArrayList()
-        barEntriesList.add(BarEntry(1f, 100f))
-        barEntriesList.add(BarEntry(2f, 350f))
-        barEntriesList.add(BarEntry(3f, 210f))
-        barEntriesList.add(BarEntry(4f, 110f))
-        barEntriesList.add(BarEntry(5f, 320f))
-        barEntriesList.add(BarEntry(6f, 330f))
-        barEntriesList.add(BarEntry(7f, 0f))
-    }
-
-    private fun setAxis() {
-        lsAxis.add("")
-        lsAxis.add("Mon")
-        lsAxis.add("Tue")
-        lsAxis.add("Wed")
-        lsAxis.add("Thu")
-        lsAxis.add("Fir")
-        lsAxis.add("Sat")
-        lsAxis.add("Sun")
     }
 }

@@ -4,17 +4,15 @@ import android.os.Bundle
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
-import androidx.databinding.DataBindingUtil
 import androidx.fragment.app.Fragment
 import com.github.mikephil.charting.data.BarEntry
 import com.lhd.runapp.customviews.SetupChart
 import com.lhd.runapp.databinding.FragmentDayBinding
 
 
-class DayFragment() : Fragment() {
+class DayFragment : Fragment() {
 
-    private var mBinding: FragmentDayBinding? = null
-    private val binding get() = mBinding!!
+    private lateinit var mBinding: FragmentDayBinding
     private lateinit var barEntriesList: ArrayList<BarEntry>
     private val lsAxis: ArrayList<String> = ArrayList()
 
@@ -23,11 +21,8 @@ class DayFragment() : Fragment() {
         inflater: LayoutInflater, container: ViewGroup?,
         savedInstanceState: Bundle?
     ): View {
-        // Inflate the layout for this fragment
-        mBinding = DataBindingUtil.inflate(
-            inflater, com.lhd.runapp.R.layout.fragment_day, container, false
-        )
-        return binding.root
+        mBinding = FragmentDayBinding.inflate(inflater, container, false)
+        return mBinding.root
     }
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
@@ -36,7 +31,7 @@ class DayFragment() : Fragment() {
             activity?.let {
                 SetupChart(
                     it.applicationContext,
-                    mBinding!!.barChart,
+                    mBinding.barChart,
                     barEntriesList,
                     lsAxis
                 )

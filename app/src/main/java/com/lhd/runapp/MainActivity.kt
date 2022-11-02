@@ -27,7 +27,6 @@ class MainActivity : AppCompatActivity(), HomeInterface {
             }
             true
         }
-
         //
         mBinding.header.btnBackPress.setOnClickListener {
             // if current fragment == ReceiveFragment => remove

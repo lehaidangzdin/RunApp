@@ -1,18 +1,21 @@
 package com.lhd.runapp.customviews
 
+import android.annotation.SuppressLint
 import android.content.Context
 import android.content.res.Resources
 import android.graphics.*
 import android.util.AttributeSet
-import android.util.Log
 import android.view.MotionEvent
 import android.view.View
 import com.lhd.runapp.R
-import com.lhd.runapp.customviews.modelCustomView.PositionBitMapClick
+import com.lhd.runapp.customviews.modelCustomView.ButtonBitMapClick
+import com.lhd.runapp.customviews.modelCustomView.ReceiveSeekbar
 import com.lhd.runapp.utils.Utils
 
 
 class MySeekBar(context: Context, attrs: AttributeSet) : View(context, attrs) {
+    private val aTAG = "MySeekBar"
+
     private var barColor = Color.GRAY
     private var barHeight = 25F
     private var indicatorColor = Color.CYAN
@@ -26,18 +29,19 @@ class MySeekBar(context: Context, attrs: AttributeSet) : View(context, attrs) {
         listOf(0, R.drawable.check, R.drawable.check, R.drawable.starcheck)
     private val indicatorBitmapCheck =
         listOf(0, R.drawable.check_, R.drawable.check_, R.drawable.star_check_)
-    private val indicatorBitmapReceive =
-        listOf(0, R.drawable.reiceve1, R.drawable.receive2, R.drawable.reiceve3)
 
     private val radiusCir = 25f
 
     lateinit var indicatorPositions: List<Float>
     lateinit var indicatorText: List<String>
+
+    lateinit var indicatorBitmapReceive: ArrayList<ReceiveSeekbar>
     private var marginHorizontalProgress = width * 0.1f
     private lateinit var bitmapConvert: Bitmap
-    private var lsPositionBitmapTouch = ArrayList<PositionBitMapClick>()
+    private var lsPositionBitmapTouch = ArrayList<ButtonBitMapClick>()
 
     private lateinit var listener: OnClickBitmapReceive
+
 
     private var progress = 1F // From float from 0 to 1
         set(state) {
@@ -47,6 +51,7 @@ class MySeekBar(context: Context, attrs: AttributeSet) : View(context, attrs) {
 
     init {
         paint.isAntiAlias = true
+        paint.style = Paint.Style.FILL // We will only use FILL for the progress bar's components.
         paintBitmap.style = Paint.Style.FILL
         paintBitmap.alpha = 60
         setupAttributes(attrs)
@@ -69,21 +74,19 @@ class MySeekBar(context: Context, attrs: AttributeSet) : View(context, attrs) {
         }
     }
 
+    /**
+     * click listener receive
+     */
+    fun setOnClickListener(listener: OnClickBitmapReceive) {
+        this.listener = listener
+    }
+
     override fun onDraw(canvas: Canvas) {
         super.onDraw(canvas)
-        paint.style = Paint.Style.FILL // We will only use FILL for the progress bar's components.
-
+        lsPositionBitmapTouch.clear()
         drawProgressBar(canvas)
         drawProgress(canvas)
         drawIndicators(canvas)
-    }
-
-
-    /**
-     * Used to get the measuredWidth from the view as a float to be used in the draw methods.
-     */
-    private fun width(): Float {
-        return measuredWidth.toFloat()
     }
 
     /**
@@ -91,7 +94,7 @@ class MySeekBar(context: Context, attrs: AttributeSet) : View(context, attrs) {
      * */
     private fun drawProgressBar(canvas: Canvas) {
         paint.color = barColor
-        drawCenteredBar(canvas, marginHorizontalProgress, width())
+        drawCenteredBar(canvas, marginHorizontalProgress, width.toFloat())
     }
 
     /**
@@ -99,38 +102,8 @@ class MySeekBar(context: Context, attrs: AttributeSet) : View(context, attrs) {
      * */
     private fun drawProgress(canvas: Canvas) {
         paint.color = progressColor
-        processWidth = (progress) * width()
+        processWidth = (progress) * width
         drawCenteredBar(canvas, marginHorizontalProgress, processWidth)
-    }
-
-    /**
-     * ve hinh tron check
-     * */
-    private fun drawIndicators(canvas: Canvas) {
-        indicatorPositions.forEachIndexed { index, element ->
-            val barPositionCenter = element * width()
-            var ls = indicatorBitmap
-            var isEnabled: Boolean
-            if (processWidth >= barPositionCenter) {
-                ls = indicatorBitmapCheck
-                paintBitmap.alpha = 200
-                isEnabled = true
-            } else {
-                paintBitmap.alpha = 60
-                isEnabled = false
-            }
-            drawCir(canvas, barPositionCenter, ls, index)
-            drawThumbnail(canvas, barPositionCenter, index)
-            drawIndicatorsReceive(
-                canvas,
-                barPositionCenter,
-                indicatorBitmapReceive,
-                index,
-                isEnabled,
-                paintBitmap
-            )
-
-        }
     }
 
     private fun drawCenteredBar(canvas: Canvas, left: Float, right: Float) {
@@ -139,6 +112,37 @@ class MySeekBar(context: Context, attrs: AttributeSet) : View(context, attrs) {
 
         val barRect = RectF(left, barTop, right, barBottom)
         canvas.drawRoundRect(barRect, 50F, 50F, paint)
+    }
+
+    /**
+     * ve hinh tron check
+     * */
+    private fun drawIndicators(canvas: Canvas) {
+        indicatorPositions.forEachIndexed { index, element ->
+            val barPositionCenter = element * width
+            var ls = indicatorBitmap
+            var isActive = false
+
+            if (processWidth >= barPositionCenter) {
+                ls = indicatorBitmapCheck
+                paintBitmap.alpha = 200
+                isActive = true
+            } else {
+                paintBitmap.alpha = 60
+            }
+            if (indicatorBitmapReceive[index].disable) {
+                paintBitmap.alpha = 60
+            }
+            drawCir(canvas, barPositionCenter, ls, index)
+            drawThumbnail(canvas, barPositionCenter, index)
+            drawIndicatorsReceive(
+                canvas,
+                barPositionCenter,
+                isActive,
+                indicatorBitmapReceive[index].icon,
+                paintBitmap
+            )
+        }
     }
 
     /**
@@ -169,7 +173,7 @@ class MySeekBar(context: Context, attrs: AttributeSet) : View(context, attrs) {
         paint.color = textThumbnail
         paint.textSize = 26f
         val bottomT = ((measuredHeight + barHeight) / 2)
-        val marginTop = width() * 0.1f
+        val marginTop = width * 0.1f
         var marginLeft = 0f
         if (i == 0) {
             marginLeft = (radiusCir / 2f)
@@ -183,59 +187,64 @@ class MySeekBar(context: Context, attrs: AttributeSet) : View(context, attrs) {
     private fun drawIndicatorsReceive(
         canvas: Canvas,
         leftDefault: Float,
-        ls: List<Int>,
-        index: Int,
-        isEnabled: Boolean,
+        isActive: Boolean,
+        icon: Int,
         paintBitmap: Paint
     ) {
         val barBottom = (measuredHeight - barHeight) / 2
-
-        if (ls[index] == 0) {
-            return
-        }
-        // neu element != 0 => ve hinh receive
-        val res: Resources = resources
-        val bitmap = BitmapFactory.decodeResource(res, ls[index])
-
-        bitmapConvert = Utils.resizeBitmap(bitmap, 60, 40)
-
         val marginTop = height * 0.3f
         val topPositionBitmap = barBottom + marginTop
-        val leftPositionBitmap = leftDefault - bitmapConvert.width / 4.5f
+        val leftPositionBitmap = leftDefault - 60f / 4.5f
 
-        if (isEnabled) {
-            lsPositionBitmapTouch.add(PositionBitMapClick(leftPositionBitmap, topPositionBitmap))
+        // neu element != 0 => ve hinh receive
+        val bitmap = BitmapFactory.decodeResource(resources, icon)
+
+        if (bitmap != null) {
+            bitmapConvert = Utils.resizeBitmap(bitmap, 60, 40)
+            canvas.drawBitmap(bitmapConvert, leftPositionBitmap, topPositionBitmap, paintBitmap)
         }
-        canvas.drawBitmap(bitmapConvert, leftPositionBitmap, topPositionBitmap, paintBitmap)
+        lsPositionBitmapTouch.add(
+            ButtonBitMapClick(
+                leftPositionBitmap,
+                topPositionBitmap,
+                isActive
+            )
+        )
     }
 
-    fun setOnClickListener(listener: OnClickBitmapReceive) {
-        this.listener = listener
-    }
-
+    @SuppressLint("ClickableViewAccessibility")
     override fun onTouchEvent(event: MotionEvent): Boolean {
         val x = event.x
         val y = event.y
         when (event.action) {
             MotionEvent.ACTION_DOWN -> {
-                lsPositionBitmapTouch.forEachIndexed { index, position ->
+                indicatorBitmapReceive.forEachIndexed { index, bitmapReceive ->
                     //Check if the x and y position of the touch is inside the bitmap
-                    if (x > position.xPosition
-                        && x < position.xPosition + bitmapConvert.width
-                        && y > position.yPosition
-                        && y < position.yPosition + bitmapConvert.height) {
-                        //Bitmap touched
-                        Log.e("BITMAP_CLICKED", "onTouchEvent: bit map $index")
-                        listener.clickItem(index)
+                    if (index != 0) {
+                        if ((x > lsPositionBitmapTouch[index].xPosition
+                                    && x < lsPositionBitmapTouch[index].xPosition + bitmapConvert.width
+                                    && y > lsPositionBitmapTouch[index].yPosition
+                                    && y < lsPositionBitmapTouch[index].yPosition + bitmapConvert.height)
+                            && lsPositionBitmapTouch[index].isActive
+                            && !bitmapReceive.disable
+                        ) {
+                            //Bitmap touched
+                            listener.clickItem(index)
+                        }
                     }
+
                 }
+
             }
         }
         return false
     }
 
+
     interface OnClickBitmapReceive {
-        fun clickItem(positionReceive: Int)
+        fun clickItem(positionReceive: Int) {
+
+        }
     }
 }
 
