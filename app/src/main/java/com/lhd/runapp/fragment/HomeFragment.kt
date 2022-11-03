@@ -63,14 +63,20 @@ class HomeFragment(private val goToReceive: HomeInterface) : Fragment(), SensorE
             goToReceive.replaceReceive(ReceiveFragment())
         }
         mBinding.mySeekBar.setOnClickListener(object : MySeekBar.OnClickBitmapReceive {
-            override fun clickItem(positionReceive: Int) {
-                if (!lsIconReceive[positionReceive].disable) {
-                    lsIconReceive[positionReceive].disable = !lsIconReceive[positionReceive].disable
-                }
-                mBinding.mySeekBar.indicatorBitmapReceive = lsIconReceive
-                mBinding.mySeekBar.invalidate()
+            override fun clickItem(index: Int) {
+                /**
+                 * 1, neu isDisable = false => CLICK
+                 * 2, update trạng thái của lsIconReceive[index] isisDisable = true
+                 * 3, truyền ls mơi update vào MySeekBar => update lại view
+                 */
+                if (!lsIconReceive[index].isDisable) {
+                    lsIconReceive[index].isDisable = !lsIconReceive[index].isDisable
+                    Log.e("CLICKED  ", "clickItem: $index")
 
-                Toast.makeText(activity, "$positionReceive", Toast.LENGTH_SHORT).show()
+                    // Xử lí logic click button ....
+
+                    updateSeekBar()
+                }
             }
         })
     }
@@ -95,7 +101,7 @@ class HomeFragment(private val goToReceive: HomeInterface) : Fragment(), SensorE
             }
             numSteps.setOnLongClickListener {
                 previousTotalSteps = totalSteps
-                numSteps.text = 0.toString()
+                numSteps.text ="0 / "
                 saveData()
                 true
             }
@@ -118,6 +124,21 @@ class HomeFragment(private val goToReceive: HomeInterface) : Fragment(), SensorE
         previousTotalSteps = savedNumber
     }
 
+
+
+
+    /**
+     * Update lại seekbar
+     */
+    private fun updateSeekBar() {
+        mBinding.mySeekBar.indicatorBitmapReceive = lsIconReceive
+        mBinding.mySeekBar.invalidate()
+    }
+
+    /**
+     * Add vị trí của indicator
+     * Add text
+     */
 
     private fun setupMySeekBar() {
         addIconReceive()
