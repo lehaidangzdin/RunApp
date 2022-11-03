@@ -14,8 +14,6 @@ import com.lhd.runapp.utils.Utils
 
 
 class MySeekBar(context: Context, attrs: AttributeSet) : View(context, attrs) {
-    private val aTAG = "MySeekBar"
-
     private var barColor = Color.GRAY
     private var barHeight = 25F
     private var indicatorColor = Color.CYAN
@@ -23,19 +21,17 @@ class MySeekBar(context: Context, attrs: AttributeSet) : View(context, attrs) {
     private var textThumbnail = Color.WHITE
     private val paint = Paint()
     private val paintBitmap = Paint()
-
     private var processWidth = 0f
     private val indicatorBitmap =
         listOf(0, R.drawable.check, R.drawable.check, R.drawable.starcheck)
     private val indicatorBitmapCheck =
         listOf(0, R.drawable.check_, R.drawable.check_, R.drawable.star_check_)
-
     private val radiusCir = 25f
 
     lateinit var indicatorPositions: List<Float>
     lateinit var indicatorText: List<String>
-
     lateinit var indicatorBitmapReceive: ArrayList<ReceiveSeekbar>
+
     private var marginHorizontalProgress = width * 0.1f
     private lateinit var bitmapConvert: Bitmap
     private var lsPositionBitmapTouch = ArrayList<ButtonBitMapClick>()
@@ -51,7 +47,7 @@ class MySeekBar(context: Context, attrs: AttributeSet) : View(context, attrs) {
 
     init {
         paint.isAntiAlias = true
-        paint.style = Paint.Style.FILL // We will only use FILL for the progress bar's components.
+        paint.style = Paint.Style.FILL
         paintBitmap.style = Paint.Style.FILL
         paintBitmap.alpha = 60
         setupAttributes(attrs)
@@ -130,7 +126,7 @@ class MySeekBar(context: Context, attrs: AttributeSet) : View(context, attrs) {
             } else {
                 paintBitmap.alpha = 60
             }
-            if (indicatorBitmapReceive[index].disable) {
+            if (indicatorBitmapReceive[index].isDisable) {
                 paintBitmap.alpha = 60
             }
             drawCir(canvas, barPositionCenter, ls, index)
@@ -203,13 +199,18 @@ class MySeekBar(context: Context, attrs: AttributeSet) : View(context, attrs) {
             bitmapConvert = Utils.resizeBitmap(bitmap, 60, 40)
             canvas.drawBitmap(bitmapConvert, leftPositionBitmap, topPositionBitmap, paintBitmap)
         }
-        lsPositionBitmapTouch.add(
-            ButtonBitMapClick(
-                leftPositionBitmap,
-                topPositionBitmap,
-                isActive
+
+        /**
+         * neu isActive = true => add position có thể click vào list lsPositionBitmapTouch
+         */
+        if (isActive) {
+            lsPositionBitmapTouch.add(
+                ButtonBitMapClick(
+                    leftPositionBitmap,
+                    topPositionBitmap
+                )
             )
-        )
+        }
     }
 
     @SuppressLint("ClickableViewAccessibility")
@@ -218,23 +219,22 @@ class MySeekBar(context: Context, attrs: AttributeSet) : View(context, attrs) {
         val y = event.y
         when (event.action) {
             MotionEvent.ACTION_DOWN -> {
-                indicatorBitmapReceive.forEachIndexed { index, bitmapReceive ->
+                /***
+                 * for lsPositionBitmapTouch để lấy position click của bitmap && bitmap isDisable = false => click
+                 */
+                lsPositionBitmapTouch.forEachIndexed { index, posBitmapTouch ->
                     //Check if the x and y position of the touch is inside the bitmap
-                    if (index != 0) {
-                        if ((x > lsPositionBitmapTouch[index].xPosition
-                                    && x < lsPositionBitmapTouch[index].xPosition + bitmapConvert.width
-                                    && y > lsPositionBitmapTouch[index].yPosition
-                                    && y < lsPositionBitmapTouch[index].yPosition + bitmapConvert.height)
-                            && lsPositionBitmapTouch[index].isActive
-                            && !bitmapReceive.disable
-                        ) {
-                            //Bitmap touched
-                            listener.clickItem(index)
-                        }
+                    if (index != 0
+                        && (x > posBitmapTouch.xPosition
+                                && x < posBitmapTouch.xPosition + bitmapConvert.width
+                                && y > posBitmapTouch.yPosition
+                                && y < posBitmapTouch.yPosition + bitmapConvert.height)
+                        && !indicatorBitmapReceive[index].isDisable
+                    ) {
+                        //Bitmap touched
+                        listener.clickItem(index)
                     }
-
                 }
-
             }
         }
         return false
@@ -242,9 +242,7 @@ class MySeekBar(context: Context, attrs: AttributeSet) : View(context, attrs) {
 
 
     interface OnClickBitmapReceive {
-        fun clickItem(positionReceive: Int) {
-
-        }
+        fun clickItem(index: Int) {}
     }
 }
 
