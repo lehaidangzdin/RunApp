@@ -48,4 +48,8 @@ dependencies {
 
     // flexbox
     implementation 'com.google.android.flexbox:flexbox:3.0.0'
+
+    // the google play services client library
+    implementation 'com.google.android.gms:play-services-fitness:21.1.0'
+    implementation 'com.google.android.gms:play-services-auth:20.3.0'
 }

@@ -1,10 +1,19 @@
 package com.lhd.runapp.fragment
 
+import android.app.Activity
+import android.content.Context
+import android.content.SharedPreferences
+import android.hardware.Sensor
+import android.hardware.SensorEvent
+import android.hardware.SensorEventListener
+import android.hardware.SensorManager
 import android.os.Bundle
+import android.util.Log
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import android.widget.Toast
+import androidx.core.content.ContextCompat.getSystemService
 import androidx.fragment.app.Fragment
 import com.google.android.material.tabs.TabLayoutMediator
 import com.lhd.runapp.R
@@ -16,12 +25,17 @@ import com.lhd.runapp.databinding.FragmentHomeBinding
 import com.lhd.runapp.interfacePresenter.HomeInterface
 import com.lhd.runapp.models.Receive
 
-class HomeFragment(private val goToReceive: HomeInterface) : Fragment() {
+class HomeFragment(private val goToReceive: HomeInterface) : Fragment(), SensorEventListener {
 
     private lateinit var mBinding: FragmentHomeBinding
     private var myAdapter = ReceiveAdapter(arrayListOf(), 0)
     private var lsReceive: ArrayList<Receive> = ArrayList()
     private var lsIconReceive = ArrayList<ReceiveSeekbar>()
+
+    private var sensorManager: SensorManager? = null
+    private var running = false
+    private var totalSteps: Int = 0
+    private var previousTotalSteps: Int = 0
 
     override fun onCreateView(
         inflater: LayoutInflater, container: ViewGroup?,
@@ -33,7 +47,11 @@ class HomeFragment(private val goToReceive: HomeInterface) : Fragment() {
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
-        //
+
+        sensorManager = activity?.getSystemService(Context.SENSOR_SERVICE) as SensorManager
+        loadData()
+        resetSteps()
+
         setupMySeekBar()
         setupViewPager()
         setupTabLayout()
@@ -56,6 +74,50 @@ class HomeFragment(private val goToReceive: HomeInterface) : Fragment() {
             }
         })
     }
+
+    override fun onResume() {
+        super.onResume()
+        running = true
+        val steps: Sensor? = sensorManager!!.getDefaultSensor(Sensor.TYPE_STEP_COUNTER)
+        if (steps == null) {
+            Toast.makeText(requireContext(), "No sensor detected on this device", Toast.LENGTH_LONG)
+                .show()
+        } else {
+            sensorManager?.registerListener(this, steps, SensorManager.SENSOR_DELAY_UI)
+        }
+    }
+
+    private fun resetSteps() {
+        with(mBinding) {
+            numSteps.setOnClickListener {
+                Toast.makeText(requireContext(), "Long tap to reset steps", Toast.LENGTH_LONG)
+                    .show()
+            }
+            numSteps.setOnLongClickListener {
+                previousTotalSteps = totalSteps
+                numSteps.text = 0.toString()
+                saveData()
+                true
+            }
+        }
+    }
+
+    private fun saveData() {
+        val sharedPreferences: SharedPreferences =
+            requireActivity().getSharedPreferences("MySteps", Context.MODE_PRIVATE)
+        val editTor: SharedPreferences.Editor = sharedPreferences.edit()
+        editTor.putInt("key1", previousTotalSteps)
+        editTor.apply()
+    }
+
+    private fun loadData() {
+        val sharedPreferences: SharedPreferences =
+            requireActivity().getSharedPreferences("MySteps", Context.MODE_PRIVATE)
+        val savedNumber: Int = sharedPreferences.getInt("key1", 0)
+        Log.e("steps saved", "$savedNumber")
+        previousTotalSteps = savedNumber
+    }
+
 
     private fun setupMySeekBar() {
         addIconReceive()
@@ -164,5 +226,14 @@ class HomeFragment(private val goToReceive: HomeInterface) : Fragment() {
             setAdapter(adapter)
             isUserInputEnabled = false
         }
+    }
+
+    override fun onSensorChanged(event: SensorEvent?) {
+        totalSteps = event!!.values[0].toInt()
+        val currentSteps: Int = totalSteps - previousTotalSteps
+        mBinding.numSteps.text = "$currentSteps / "
+    }
+
+    override fun onAccuracyChanged(p0: Sensor?, p1: Int) {
     }
 }
