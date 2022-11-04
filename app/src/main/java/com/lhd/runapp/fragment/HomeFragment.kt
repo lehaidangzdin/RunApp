@@ -59,26 +59,29 @@ class HomeFragment(private val goToReceive: HomeInterface) : Fragment(), SensorE
         setUpRcv()
 
         // listener
-        mBinding.tvViewAll.setOnClickListener {
-            goToReceive.replaceReceive(ReceiveFragment())
-        }
-        mBinding.mySeekBar.setOnClickListener(object : MySeekBar.OnClickBitmapReceive {
-            override fun clickItem(index: Int) {
-                /**
-                 * 1, neu isDisable = false => CLICK
-                 * 2, update trạng thái của lsIconReceive[index] isisDisable = true
-                 * 3, truyền ls mơi update vào MySeekBar => update lại view
-                 */
-                if (!lsIconReceive[index].isDisable) {
-                    lsIconReceive[index].isDisable = !lsIconReceive[index].isDisable
-                    Log.e("CLICKED  ", "clickItem: $index")
-
-                    // Xử lí logic click button ....
-
-                    updateSeekBar()
-                }
+        with(mBinding) {
+            tvViewAll.setOnClickListener {
+                goToReceive.replaceReceive(ReceiveFragment())
             }
-        })
+
+            mySeekBar.setOnClickListener(object : MySeekBar.OnClickBitmapReceive {
+                override fun clickItem(index: Int) {
+                    /**
+                     * 1, neu isDisable = false => CLICK
+                     * 2, update trạng thái của lsIconReceive[index] isisDisable = true
+                     * 3, truyền ls mơi update vào MySeekBar => update lại view
+                     */
+                    if (!lsIconReceive[index].isDisable) {
+                        lsIconReceive[index].isDisable = !lsIconReceive[index].isDisable
+                        Log.e("CLICKED  ", "clickItem: $index")
+
+                        // Xử lí logic click button ....
+
+                        updateSeekBar(lsIconReceive)
+                    }
+                }
+            })
+        }
     }
 
     override fun onResume() {
@@ -101,7 +104,7 @@ class HomeFragment(private val goToReceive: HomeInterface) : Fragment(), SensorE
             }
             numSteps.setOnLongClickListener {
                 previousTotalSteps = totalSteps
-                numSteps.text ="0 / "
+                numSteps.text = "0 / "
                 saveData()
                 true
             }
@@ -124,13 +127,10 @@ class HomeFragment(private val goToReceive: HomeInterface) : Fragment(), SensorE
         previousTotalSteps = savedNumber
     }
 
-
-
-
     /**
      * Update lại seekbar
      */
-    private fun updateSeekBar() {
+    private fun updateSeekBar(lsIconReceive: ArrayList<ReceiveSeekbar>) {
         mBinding.mySeekBar.indicatorBitmapReceive = lsIconReceive
         mBinding.mySeekBar.invalidate()
     }

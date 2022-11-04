@@ -61,6 +61,7 @@
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
                         android:layout_centerInParent="true"
+                        android:layout_marginStart="@dimen/dimen_4"
                         android:layout_toEndOf="@+id/today"
                         android:text="@string/_500"
                         android:textColor="@color/white"
@@ -83,7 +84,7 @@
                     android:layout_width="match_parent"
                     android:layout_height="@dimen/dimen_200"
                     android:layout_centerVertical="true"
-                    android:layout_marginHorizontal="8dp"
+                    android:layout_marginHorizontal="@dimen/dimen_8"
                     android:foregroundGravity="center"
                     app:barColor="@color/bg_seekbar"
                     app:barHeight="20"
@@ -104,9 +105,8 @@
                 android:id="@+id/viewPager"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:layout_marginHorizontal="12dp"
-                android:layout_marginTop="@dimen/dimen_8"
-                />
+                android:layout_marginHorizontal="@dimen/dimen_12"
+                android:layout_marginTop="@dimen/dimen_8" />
 
             <LinearLayout
                 android:layout_width="match_parent"
