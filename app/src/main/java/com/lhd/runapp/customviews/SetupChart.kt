@@ -42,13 +42,13 @@ class SetupChart(
             barWidth = 0.6f
         }
         // radius column
-        val myBarChartRender = MyBarChartRender(
-            barChart,
-            barChart.animator,
-            barChart.viewPortHandler
-        ).apply {
-            setRadius(10)
-        }
+//        val myBarChartRender = MyBarChartRender(
+//            barChart,
+//            barChart.animator,
+//            barChart.viewPortHandler
+//        ).apply {
+//            setRadius(10)
+//        }
         // setup chart
         barChart.apply {
             data = dataChart
@@ -56,7 +56,7 @@ class SetupChart(
             description.isEnabled = false
             marker = mv
             isDoubleTapToZoomEnabled = false
-            renderer = myBarChartRender
+//            renderer = myBarChartRender
             setTouchEnabled(true)
             setScaleEnabled(false)
             setVisibleXRangeMaximum(7F)

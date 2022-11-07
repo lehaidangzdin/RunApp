@@ -139,7 +139,6 @@ class HomeFragment(private val goToReceive: HomeInterface) : Fragment(), SensorE
      * Add vị trí của indicator
      * Add text
      */
-
     private fun setupMySeekBar() {
         addIconReceive()
         mBinding.mySeekBar.indicatorPositions = listOf(0F, 0.1F, 0.3F, 0.85F)
