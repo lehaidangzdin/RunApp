@@ -1,6 +1,7 @@
 package com.lhd.runapp.fragment.fragChart
 
 import android.app.Activity
+import android.content.Context
 import android.content.Intent
 import android.os.Build
 import android.os.Bundle
@@ -9,6 +10,7 @@ import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import android.widget.Toast
+
 import androidx.annotation.RequiresApi
 import androidx.fragment.app.Fragment
 import com.github.mikephil.charting.data.BarEntry
@@ -20,17 +22,18 @@ import com.google.android.gms.fitness.data.DataSource
 import com.google.android.gms.fitness.data.DataType
 import com.google.android.gms.fitness.request.DataReadRequest
 import com.lhd.runapp.FitRequestCode
-import com.lhd.runapp.TAG
 import com.lhd.runapp.customviews.SetupChart
+
 import com.lhd.runapp.databinding.FragmentDayBinding
 import java.text.DateFormat
 import java.util.*
 import java.util.concurrent.TimeUnit
 import kotlin.collections.ArrayList
-import kotlin.math.log
 
 
-class DayFragment : Fragment() {
+const val TAG = "DayFragment"
+
+class DayFragment() : Fragment() {
 
     private lateinit var mBinding: FragmentDayBinding
     private var xFloat = 0f
@@ -100,7 +103,6 @@ class DayFragment : Fragment() {
             .build()
 
 
-
         Fitness.getHistoryClient(requireActivity(), getAccount())
             .readData(readRequest)
             .addOnSuccessListener { response ->
@@ -114,7 +116,6 @@ class DayFragment : Fragment() {
                     Log.e(TAG, "accessGoogleFit: ${stepsDate.toString().substring(0, 4)}")
                     xFloat++
                     for (dataSet in bucket.dataSets) {
-//                        stepByMonth += dumpDataSet(dataSet)
                         barEntriesList.add(BarEntry(xFloat, dumpDataSet(dataSet)))
                         Log.e(TAG, "accessGoogleFit: ${dumpDataSet(dataSet)}")
                     }

@@ -1,6 +1,7 @@
 package com.lhd.runapp.customviews
 
 import android.graphics.*
+import android.util.Log
 import com.github.mikephil.charting.animation.ChartAnimator
 import com.github.mikephil.charting.interfaces.dataprovider.BarDataProvider
 import com.github.mikephil.charting.interfaces.datasets.IBarDataSet
@@ -10,6 +11,7 @@ import com.github.mikephil.charting.utils.Utils
 import com.github.mikephil.charting.utils.ViewPortHandler
 import kotlin.math.ceil
 import kotlin.math.min
+
 
 class MyBarChartRender(
     chart: BarDataProvider?,
@@ -25,6 +27,7 @@ class MyBarChartRender(
 
 
     override fun drawDataSet(c: Canvas, dataSet: IBarDataSet, index: Int) {
+//        Log.e("MyBarChartRender", "drawDataSet: $index")
         val trans: Transformer = mChart.getTransformer(dataSet.axisDependency)
         mBarBorderPaint.color = dataSet.barBorderColor
         mBarBorderPaint.strokeWidth = Utils.convertDpToPixel(dataSet.barBorderWidth)

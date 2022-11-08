@@ -53,7 +53,7 @@
                         android:layout_toEndOf="@+id/iconFoot"
                         android:text="@string/today"
                         android:textColor="@color/red"
-                        android:textSize="20sp"
+                        android:textSize="18sp"
                         android:textStyle="bold" />
 
                     <TextView
@@ -65,7 +65,7 @@
                         android:layout_toEndOf="@+id/today"
                         android:text="@string/_500"
                         android:textColor="@color/white"
-                        android:textSize="20sp"
+                        android:textSize="16sp"
                         android:textStyle="bold" />
 
                     <TextView
@@ -76,7 +76,7 @@
                         android:layout_toEndOf="@+id/numSteps"
                         android:text="@string/_4_000_steps"
                         android:textColor="@color/white"
-                        android:textSize="16sp" />
+                        android:textSize="13sp" />
                 </RelativeLayout>
 
                 <com.lhd.runapp.customviews.MySeekBar

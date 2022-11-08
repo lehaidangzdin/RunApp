@@ -22,11 +22,9 @@ import com.lhd.runapp.FitRequestCode.GG_FIT_REQUEST_CODE
 import com.lhd.runapp.databinding.ActivityMain3Binding
 import java.text.DateFormat
 import java.text.DateFormat.getDateInstance
-import java.text.SimpleDateFormat
 import java.util.*
 import java.util.concurrent.TimeUnit
 import kotlin.collections.ArrayList
-
 
 enum class FitRequestCode {
     GG_FIT_REQUEST_CODE

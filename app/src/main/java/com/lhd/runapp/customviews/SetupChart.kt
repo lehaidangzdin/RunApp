@@ -12,8 +12,9 @@ import com.github.mikephil.charting.formatter.IndexAxisValueFormatter
 import com.github.mikephil.charting.model.GradientColor
 import com.lhd.runapp.R
 
+
 class SetupChart(
-    private val context: Context,
+    private val context: Context?,
     private val barChart: BarChart,
     private val barEntriesList: ArrayList<BarEntry>,
     private val lsAxis: ArrayList<String>
@@ -24,7 +25,7 @@ class SetupChart(
 
     fun setUp() {
         // set marker
-        val mv = MyMarkerView(context, R.layout.my_marker)
+        val mv = MyMarkerView(context!!, R.layout.my_marker)
         // gradient column
         val startColor = ContextCompat.getColor(context, R.color.gradient1)
         val endColor = ContextCompat.getColor(context, R.color.gradient3)
@@ -63,7 +64,7 @@ class SetupChart(
         }
         // setup cot y ben trai
         barChart.axisLeft.apply {
-            setDrawGridLines(false)
+            setDrawGridLines(true)
             setDrawAxisLine(false)
             setStartAtZero(true)
             textColor = Color.WHITE
@@ -80,9 +81,11 @@ class SetupChart(
             valueFormatter = IndexAxisValueFormatter(lsAxis)
             textColor = Color.WHITE
             textSize = 12f
-            setDrawAxisLine(false)
-            setDrawGridLines(false)
 
+            setDrawAxisLine(true)
+            setDrawGridLines(false)
         }
+        // hien thi cot cuoi cung
+        barChart.moveViewToX(dataChart.entryCount.toFloat())
     }
 }

@@ -3,6 +3,7 @@
     <declare-styleable name="IndicatorProgressBar">
         <!-- The color of the progressbar (not the progress)-->
         <attr name="barColor" format="color" />
+        <attr name="textThumbnailSize" format="float" />
         <!-- The color of the indicators on the progress bar (such as ads on YouTube)-->
         <attr name="indicatorColor" format="color" />
         <!-- The color of the progressed time/work of the progressbar-->
