@@ -27,7 +27,7 @@ class MyBarChartRender(
 
 
     override fun drawDataSet(c: Canvas, dataSet: IBarDataSet, index: Int) {
-//        Log.e("MyBarChartRender", "drawDataSet: $index")
+        Log.e("MyBarChartRender", "drawDataSet: $index")
         val trans: Transformer = mChart.getTransformer(dataSet.axisDependency)
         mBarBorderPaint.color = dataSet.barBorderColor
         mBarBorderPaint.strokeWidth = Utils.convertDpToPixel(dataSet.barBorderWidth)

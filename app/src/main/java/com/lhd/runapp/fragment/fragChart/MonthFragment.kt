@@ -12,7 +12,7 @@ import com.lhd.runapp.databinding.FragmentMonthBinding
 class MonthFragment : Fragment() {
 
     private lateinit var mBinding: FragmentMonthBinding
-    private lateinit var barEntriesList: ArrayList<BarEntry>
+    private var barEntriesList: ArrayList<BarEntry> = ArrayList()
     private val lsAxis: ArrayList<String> = ArrayList()
     override fun onCreateView(
         inflater: LayoutInflater, container: ViewGroup?,
@@ -34,7 +34,7 @@ class MonthFragment : Fragment() {
                     lsAxis
                 )
             }
-        setUpChart?.setUp()
+        setUpChart?.applyOptions()
     }
 
     override fun onCreate(savedInstanceState: Bundle?) {
@@ -44,7 +44,6 @@ class MonthFragment : Fragment() {
     }
 
     private fun getBarChartData() {
-        barEntriesList = ArrayList()
         barEntriesList.add(BarEntry(1f, 100f))
         barEntriesList.add(BarEntry(2f, 350f))
         barEntriesList.add(BarEntry(3f, 210f))

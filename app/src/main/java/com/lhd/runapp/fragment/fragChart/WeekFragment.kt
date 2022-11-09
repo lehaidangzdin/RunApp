@@ -34,7 +34,7 @@ class WeekFragment : Fragment() {
                     lsAxis
                 )
             }
-        setUpChart?.setUp()
+        setUpChart?.applyOptions()
     }
 
     override fun onCreate(savedInstanceState: Bundle?) {

@@ -208,7 +208,7 @@ class MySeekBar(context: Context, attrs: AttributeSet) : View(context, attrs) {
         val bitmap = BitmapFactory.decodeResource(resources, icon)
 
         if (bitmap != null) {
-            bitmapConvert = Utils.resizeBitmap(bitmap, 60, 40)
+            bitmapConvert = Utils.resizeBitmap(bitmap, 50, 35)
             canvas.drawBitmap(bitmapConvert, leftPositionBitmap, topPositionBitmap, paintBitmap)
         }
 

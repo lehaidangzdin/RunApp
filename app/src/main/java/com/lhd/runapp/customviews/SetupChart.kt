@@ -23,7 +23,7 @@ class SetupChart(
     private lateinit var dataSet: BarDataSet
 
 
-    fun setUp() {
+    fun applyOptions() {
         // set marker
         val mv = MyMarkerView(context!!, R.layout.my_marker)
         // gradient column
@@ -43,13 +43,13 @@ class SetupChart(
             barWidth = 0.6f
         }
         // radius column
-//        val myBarChartRender = MyBarChartRender(
-//            barChart,
-//            barChart.animator,
-//            barChart.viewPortHandler
-//        ).apply {
-//            setRadius(10)
-//        }
+        val myBarChartRender = MyBarChartRender(
+            barChart,
+            barChart.animator,
+            barChart.viewPortHandler
+        ).apply {
+            setRadius(10)
+        }
         // setup chart
         barChart.apply {
             data = dataChart
@@ -64,7 +64,7 @@ class SetupChart(
         }
         // setup cot y ben trai
         barChart.axisLeft.apply {
-            setDrawGridLines(true)
+            setDrawGridLines(false)
             setDrawAxisLine(false)
             setStartAtZero(true)
             textColor = Color.WHITE
@@ -81,9 +81,9 @@ class SetupChart(
             valueFormatter = IndexAxisValueFormatter(lsAxis)
             textColor = Color.WHITE
             textSize = 12f
-
-            setDrawAxisLine(true)
+            setDrawAxisLine(false)
             setDrawGridLines(false)
+
         }
         // hien thi cot cuoi cung
         barChart.moveViewToX(dataChart.entryCount.toFloat())

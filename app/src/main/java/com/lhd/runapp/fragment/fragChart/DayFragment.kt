@@ -10,7 +10,6 @@ import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import android.widget.Toast
-
 import androidx.annotation.RequiresApi
 import androidx.fragment.app.Fragment
 import com.github.mikephil.charting.data.BarEntry
@@ -23,7 +22,6 @@ import com.google.android.gms.fitness.data.DataType
 import com.google.android.gms.fitness.request.DataReadRequest
 import com.lhd.runapp.FitRequestCode
 import com.lhd.runapp.customviews.SetupChart
-
 import com.lhd.runapp.databinding.FragmentDayBinding
 import java.text.DateFormat
 import java.util.*
@@ -33,12 +31,11 @@ import kotlin.collections.ArrayList
 
 const val TAG = "DayFragment"
 
-class DayFragment() : Fragment() {
+class DayFragment : Fragment() {
 
     private lateinit var mBinding: FragmentDayBinding
     private var xFloat = 0f
-    private val barEntriesList: ArrayList<BarEntry> = ArrayList()
-    private val lsAxis: ArrayList<String> = ArrayList()
+
 
     private val fitnessOptions: FitnessOptions by lazy {
         FitnessOptions.builder()
@@ -47,6 +44,16 @@ class DayFragment() : Fragment() {
             .build()
     }
 
+    @RequiresApi(Build.VERSION_CODES.O)
+    override fun onAttach(context: Context) {
+        super.onAttach(context)
+        checkPermission()
+    }
+
+    @RequiresApi(Build.VERSION_CODES.O)
+    override fun onCreate(savedInstanceState: Bundle?) {
+        super.onCreate(savedInstanceState)
+    }
 
     override fun onCreateView(
         inflater: LayoutInflater, container: ViewGroup?,
@@ -60,15 +67,8 @@ class DayFragment() : Fragment() {
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
 
-        //
-        checkPermission()
-
     }
 
-    override fun onCreate(savedInstanceState: Bundle?) {
-        super.onCreate(savedInstanceState)
-        lsAxis.add("")
-    }
 
     private fun getAccount() =
         GoogleSignIn.getAccountForExtension(requireActivity(), fitnessOptions)
@@ -77,7 +77,12 @@ class DayFragment() : Fragment() {
     @RequiresApi(Build.VERSION_CODES.O)
     private fun accessGoogleFit() {
 
-//       lấy step từ 6 ngày trc đên hôm nay
+        //
+        val barEntriesList = ArrayList<BarEntry>()
+        val lsAxis = ArrayList<String>()
+        lsAxis.add("")
+
+        //lấy step từ 6 ngày trc đên hôm nay
         val cal = Calendar.getInstance()
         val now = Date()
         cal.time = now
@@ -89,7 +94,8 @@ class DayFragment() : Fragment() {
         Log.i(TAG, "Range Start: " + dateFormat.format(startTime))
         Log.i(TAG, "Range End: " + dateFormat.format(endTime))
 
-        val ESTIMATED_STEP_DELTAS: DataSource = DataSource.Builder()
+
+        val estimatedStepDeltas: DataSource = DataSource.Builder()
             .setDataType(DataType.TYPE_STEP_COUNT_DELTA)
             .setType(DataSource.TYPE_DERIVED)
             .setStreamName("estimated_steps")
@@ -97,7 +103,7 @@ class DayFragment() : Fragment() {
             .build()
 
         val readRequest = DataReadRequest.Builder()
-            .aggregate(ESTIMATED_STEP_DELTAS, DataType.AGGREGATE_STEP_COUNT_DELTA)
+            .aggregate(estimatedStepDeltas, DataType.AGGREGATE_STEP_COUNT_DELTA)
             .setTimeRange(startTime, endTime, TimeUnit.MILLISECONDS)
             .bucketByTime(1, TimeUnit.DAYS)
             .build()
@@ -113,34 +119,35 @@ class DayFragment() : Fragment() {
                     val stepsDate = Date(days)
                     // add day vao ls
                     lsAxis.add(stepsDate.toString().substring(0, 4))
-                    Log.e(TAG, "accessGoogleFit: ${stepsDate.toString().substring(0, 4)}")
                     xFloat++
                     for (dataSet in bucket.dataSets) {
                         barEntriesList.add(BarEntry(xFloat, dumpDataSet(dataSet)))
-                        Log.e(TAG, "accessGoogleFit: ${dumpDataSet(dataSet)}")
                     }
-                }
-                displayBarChart()
 
+                }
+//                displayBarChart()
+
+
+                SetupChart(context,mBinding.barChart,barEntriesList,lsAxis)
+                    .applyOptions()
             }
             .addOnFailureListener { e -> Log.d(TAG, "OnFailure()", e) }
     }
 
-    private fun displayBarChart() {
-        Log.e(TAG, "displayBarChart: ${lsAxis.size}")
-        Log.e(TAG, "displayBarChart: ${barEntriesList.size}")
-
-        val setUpChart =
-            activity?.let {
-                SetupChart(
-                    it.applicationContext,
-                    mBinding.barChart,
-                    barEntriesList,
-                    lsAxis
-                )
-            }
-        setUpChart?.setUp()
-    }
+//    private fun displayBarChart() {
+//        Log.e(TAG, "displayBarChart: ${lsAxis.size}")
+//        Log.e(TAG, "displayBarChart: ${barEntriesList.size}")
+//
+//        activity?.let {
+//            SetupChart(
+//                it.applicationContext,
+//                mBinding.barChart,
+//                barEntriesList,
+//                lsAxis
+//            )
+//        }?.applyOptions()
+//
+//    }
 
     private fun dumpDataSet(dataSet: DataSet): Float {
         var totalSteps = 0f;

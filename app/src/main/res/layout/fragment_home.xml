@@ -99,10 +99,32 @@
                 android:layout_width="wrap_content"
                 android:layout_height="@dimen/dimen_45"
                 android:layout_gravity="center_horizontal"
-                android:background="@drawable/bg_tablayout" />
+                android:background="@drawable/bg_tablayout">
 
-            <androidx.viewpager2.widget.ViewPager2
-                android:id="@+id/viewPager"
+                <com.google.android.material.tabs.TabItem
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:text="@string/day" />
+
+                <com.google.android.material.tabs.TabItem
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:text="@string/week" />
+
+                <com.google.android.material.tabs.TabItem
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:text="@string/month" />
+            </com.google.android.material.tabs.TabLayout>
+
+            <!--            <androidx.viewpager2.widget.ViewPager2-->
+            <!--                android:id="@+id/viewPager"-->
+            <!--                android:layout_width="match_parent"-->
+            <!--                android:layout_height="wrap_content"-->
+            <!--                android:layout_marginHorizontal="@dimen/dimen_12"-->
+            <!--                android:layout_marginTop="@dimen/dimen_8" />-->
+            <FrameLayout
+                android:id="@+id/frameFrg"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:layout_marginHorizontal="@dimen/dimen_12"

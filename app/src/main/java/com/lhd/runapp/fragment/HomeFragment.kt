@@ -1,6 +1,5 @@
 package com.lhd.runapp.fragment
 
-
 import android.os.Build
 import android.os.Bundle
 import android.util.Log
@@ -9,19 +8,22 @@ import android.view.View
 import android.view.ViewGroup
 import androidx.annotation.RequiresApi
 import androidx.fragment.app.Fragment
+import androidx.fragment.app.FragmentTransaction
 import com.google.android.gms.auth.api.signin.GoogleSignIn
 import com.google.android.gms.fitness.Fitness
 import com.google.android.gms.fitness.FitnessOptions
 import com.google.android.gms.fitness.data.DataType
 import com.google.android.gms.fitness.data.Field
-import com.google.android.material.tabs.TabLayoutMediator
+import com.google.android.material.tabs.TabLayout
 import com.lhd.runapp.FitRequestCode
 import com.lhd.runapp.R
 import com.lhd.runapp.adapter.ReceiveAdapter
-import com.lhd.runapp.adapter.TabLayoutAdapter
 import com.lhd.runapp.customviews.MySeekBar
 import com.lhd.runapp.customviews.modelCustomView.ReceiveSeekbar
 import com.lhd.runapp.databinding.FragmentHomeBinding
+import com.lhd.runapp.fragment.fragChart.DayFragment
+import com.lhd.runapp.fragment.fragChart.MonthFragment
+import com.lhd.runapp.fragment.fragChart.WeekFragment
 import com.lhd.runapp.interfacePresenter.HomeInterface
 import com.lhd.runapp.models.Receive
 import kotlin.collections.ArrayList
@@ -33,13 +35,17 @@ class HomeFragment(private val goToReceive: HomeInterface) : Fragment() {
 
     private lateinit var mBinding: FragmentHomeBinding
     private var myAdapter = ReceiveAdapter(arrayListOf(), 0)
-    private var lsReceive: ArrayList<Receive> = ArrayList()
+
+    //    private var lsReceive: ArrayList<Receive> = ArrayList()
     private var lsIconReceive = ArrayList<ReceiveSeekbar>()
 
     private val fitnessOptions = FitnessOptions.builder()
         .addDataType(DataType.TYPE_STEP_COUNT_CUMULATIVE)
         .addDataType(DataType.TYPE_STEP_COUNT_DELTA)
         .build()
+
+    //
+    private var fragment: Fragment? = null
 
 
     override fun onCreateView(
@@ -54,12 +60,10 @@ class HomeFragment(private val goToReceive: HomeInterface) : Fragment() {
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
 
-
+        replaceFragment(DayFragment())
         setupMySeekBar()
         checkPermission()
-        setupViewPager()
         setupTabLayout()
-        addLsReceive()
         setUpRcv()
 
         // listener
@@ -126,6 +130,7 @@ class HomeFragment(private val goToReceive: HomeInterface) : Fragment() {
     private fun displayTotalSteps(total: Int) {
         mBinding.numSteps.text = "$total"
     }
+
     /**
      * Update lại seekbar
      */
@@ -140,12 +145,13 @@ class HomeFragment(private val goToReceive: HomeInterface) : Fragment() {
      */
     private fun setupMySeekBar() {
         addIconReceive()
-        mBinding.mySeekBar.indicatorPositions = listOf(0F, 0.1F, 0.3F, 0.85F)
+        mBinding.mySeekBar.indicatorPositions = listOf(0F, 0.1F, 0.3F, 0.8F)
         mBinding.mySeekBar.indicatorText = listOf("0", "500", "1000", "4000")
         mBinding.mySeekBar.indicatorBitmapReceive = lsIconReceive
     }
 
     private fun setUpRcv() {
+        myAdapter.addData(addLsReceive())
         mBinding.rcv.apply {
             adapter = myAdapter
             setHasFixedSize(true)
@@ -159,90 +165,99 @@ class HomeFragment(private val goToReceive: HomeInterface) : Fragment() {
         lsIconReceive.add(ReceiveSeekbar(R.drawable.reiceve3, false))
     }
 
-    private fun addLsReceive() {
-        lsReceive.add(
-            Receive(
-                R.drawable.huy_chuong2,
-                "Spectacular Breakout",
-                "14/10/2022",
-                "120",
-                "120"
-            )
-        )
-        lsReceive.add(
-            Receive(
-                R.drawable.huy_huong1,
-                "October Challenger",
-                "09/10/2022",
-                "120",
-                "120"
-            )
-        )
-        lsReceive.add(Receive(R.drawable.huy_chuong3, "Step to Mars ", "04/10/2022", "120", "120"))
-        lsReceive.add(
-            Receive(
-                R.drawable.huy_chuong4,
-                "August Challenger",
-                "14/08/2022",
-                "120",
-                "120"
-            )
-        )
-        lsReceive.add(
-            Receive(
-                R.drawable.huy_chuong2,
-                "Spectacular Breakout",
-                "14/10/2022",
-                "120",
-                "120"
-            )
-        )
-        lsReceive.add(
-            Receive(
-                R.drawable.huy_huong1,
-                "October Challenger",
-                "09/10/2022",
-                "120",
-                "120"
-            )
-        )
-        lsReceive.add(Receive(R.drawable.huy_chuong3, "Step to Mars ", "04/10/2022", "120", "120"))
-        lsReceive.add(
-            Receive(
-                R.drawable.huy_chuong4,
-                "August Challenger",
-                "14/08/2022",
-                "120",
-                "120"
-            )
-        )
+    private fun addLsReceive(): ArrayList<Receive> {
 
-        myAdapter.addData(lsReceive)
+        val lsAchieved = ArrayList<Receive>()
+
+        lsAchieved.add(
+            Receive(
+                R.drawable.huy_chuong2,
+                "Spectacular Breakout",
+                "14/10/2022",
+                "120",
+                "120"
+            )
+        )
+        lsAchieved.add(
+            Receive(
+                R.drawable.huy_huong1,
+                "October Challenger",
+                "09/10/2022",
+                "120",
+                "120"
+            )
+        )
+        lsAchieved.add(Receive(R.drawable.huy_chuong3, "Step to Mars ", "04/10/2022", "120", "120"))
+        lsAchieved.add(
+            Receive(
+                R.drawable.huy_chuong4,
+                "August Challenger",
+                "14/08/2022",
+                "120",
+                "120"
+            )
+        )
+        lsAchieved.add(
+            Receive(
+                R.drawable.huy_chuong2,
+                "Spectacular Breakout",
+                "14/10/2022",
+                "120",
+                "120"
+            )
+        )
+        lsAchieved.add(
+            Receive(
+                R.drawable.huy_huong1,
+                "October Challenger",
+                "09/10/2022",
+                "120",
+                "120"
+            )
+        )
+        lsAchieved.add(Receive(R.drawable.huy_chuong3, "Step to Mars ", "04/10/2022", "120", "120"))
+        lsAchieved.add(
+            Receive(
+                R.drawable.huy_chuong4,
+                "August Challenger",
+                "14/08/2022",
+                "120",
+                "120"
+            )
+        )
+        return lsAchieved
     }
 
     private fun setupTabLayout() {
-        TabLayoutMediator(
-            mBinding.tabLayout, mBinding.viewPager
-        ) { tab, position ->
-            when (position) {
-                0 -> {
-                    tab.text = resources.getString(R.string.day)
+        with(mBinding) {
+            tabLayout.addOnTabSelectedListener(object : TabLayout.OnTabSelectedListener {
+                override fun onTabSelected(tab: TabLayout.Tab?) {
+                    when (tab?.position) {
+                        0 -> fragment = DayFragment()
+                        1 -> fragment = WeekFragment()
+                        2 -> fragment = MonthFragment()
+                    }
+                    replaceFragment(fragment)
                 }
-                1 -> {
-                    tab.text = resources.getString(R.string.week)
-                }
-                2 -> {
-                    tab.text = resources.getString(R.string.month)
-                }
-            }
-        }.attach()
-    }
 
-    private fun setupViewPager() {
-        val adapter = activity?.let { TabLayoutAdapter(it) }
-        mBinding.viewPager.apply {
-            setAdapter(adapter)
-            isUserInputEnabled = false
+                override fun onTabUnselected(tab: TabLayout.Tab?) {
+                }
+
+                override fun onTabReselected(tab: TabLayout.Tab?) {
+                }
+
+            })
         }
     }
+
+    private fun replaceFragment(fragment: Fragment?) {
+        val fm = requireActivity().supportFragmentManager
+        val ft = fm.beginTransaction()
+        if (fragment != null) {
+            ft.replace(R.id.frameFrg, fragment)
+        }
+        ft.setTransition(FragmentTransaction.TRANSIT_FRAGMENT_OPEN)
+        ft.commit()
+    }
+
 }
