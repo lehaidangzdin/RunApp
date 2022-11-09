@@ -6,6 +6,8 @@ import android.view.View
 import android.view.ViewGroup
 import androidx.fragment.app.Fragment
 import com.github.mikephil.charting.data.BarEntry
+import com.lhd.runapp.R
+import com.lhd.runapp.customviews.MyMarkerView
 import com.lhd.runapp.customviews.SetupChart
 import com.lhd.runapp.databinding.FragmentWeekBinding
 
@@ -25,13 +27,15 @@ class WeekFragment : Fragment() {
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
+
         val setUpChart =
             activity?.let {
                 SetupChart(
                     it.applicationContext,
                     mBinding.barChart,
                     barEntriesList,
-                    lsAxis
+                    lsAxis,
+                    28000f
                 )
             }
         setUpChart?.applyOptions()

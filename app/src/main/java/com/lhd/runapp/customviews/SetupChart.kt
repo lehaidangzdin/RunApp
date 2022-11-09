@@ -3,21 +3,26 @@ package com.lhd.runapp.customviews
 import android.content.Context
 import android.graphics.Color
 import androidx.core.content.ContextCompat
+import com.github.mikephil.charting.animation.Easing
 import com.github.mikephil.charting.charts.BarChart
 import com.github.mikephil.charting.components.XAxis
 import com.github.mikephil.charting.data.BarData
 import com.github.mikephil.charting.data.BarDataSet
 import com.github.mikephil.charting.data.BarEntry
 import com.github.mikephil.charting.formatter.IndexAxisValueFormatter
+import com.github.mikephil.charting.formatter.LargeValueFormatter
 import com.github.mikephil.charting.model.GradientColor
 import com.lhd.runapp.R
+import com.lhd.runapp.utils.Utils
+import com.lhd.runapp.utils.Utils.getMaxValue
 
 
 class SetupChart(
     private val context: Context?,
     private val barChart: BarChart,
-    private val barEntriesList: ArrayList<BarEntry>,
-    private val lsAxis: ArrayList<String>
+    private val lsBarEntries: ArrayList<BarEntry>,
+    private val lsAxis: ArrayList<String>,
+    private val maxYValue: Float
 ) {
     private lateinit var dataChart: BarData
     private lateinit var dataSet: BarDataSet
@@ -33,10 +38,11 @@ class SetupChart(
         lsGradientColors.add(GradientColor(endColor, startColor))
 
         // data column
-        dataSet = BarDataSet(barEntriesList, "").apply {
+        dataSet = BarDataSet(lsBarEntries, "").apply {
             setDrawValues(false)
             valueTextSize = 14f
             gradientColors = lsGradientColors
+
         }
         // width column
         dataChart = BarData(dataSet).apply {
@@ -57,16 +63,23 @@ class SetupChart(
             description.isEnabled = false
             marker = mv
             isDoubleTapToZoomEnabled = false
+            animateY(3000, Easing.EaseOutBack)
 //            renderer = myBarChartRender
             setTouchEnabled(true)
             setScaleEnabled(false)
             setVisibleXRangeMaximum(7F)
         }
         // setup cot y ben trai
+        var maxValue = maxYValue
+        if (getMaxValue(lsBarEntries) >= 4000f) {
+            maxValue = getMaxValue(lsBarEntries)
+        }
         barChart.axisLeft.apply {
             setDrawGridLines(false)
             setDrawAxisLine(false)
             setStartAtZero(true)
+            setAxisMaxValue(maxValue)
+            valueFormatter = LargeValueFormatter()
             textColor = Color.WHITE
             textSize = 12f
         }

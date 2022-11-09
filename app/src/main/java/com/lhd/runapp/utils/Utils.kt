@@ -1,10 +1,33 @@
 package com.lhd.runapp.utils
 
+import android.content.Context
 import android.content.res.Resources
 import android.graphics.Bitmap
+import com.github.mikephil.charting.data.BarEntry
+import com.google.android.gms.auth.api.signin.GoogleSignIn
+import com.google.android.gms.fitness.FitnessOptions
+import com.google.android.gms.fitness.data.DataType
+import java.text.DecimalFormat
+import kotlin.math.floor
+import kotlin.math.log10
+import kotlin.math.pow
 
 object Utils {
-    fun convertDpToPixels(dp: Int): Int {
+
+
+    val fitnessOptions: FitnessOptions by lazy {
+        FitnessOptions.builder()
+            .addDataType(DataType.TYPE_STEP_COUNT_CUMULATIVE)
+            .addDataType(DataType.TYPE_STEP_COUNT_DELTA, FitnessOptions.ACCESS_WRITE)
+            .addDataType(DataType.AGGREGATE_STEP_COUNT_DELTA, FitnessOptions.ACCESS_WRITE)
+            .build()
+    }
+
+    fun getAccount(context: Context) =
+        GoogleSignIn.getAccountForExtension(context, fitnessOptions)
+
+
+    private fun convertDpToPixels(dp: Int): Int {
         return (dp * Resources.getSystem().displayMetrics.density).toInt()
     }
 
@@ -18,5 +41,33 @@ object Utils {
             convertDpToPixels(toHeight),
             false
         )
+    }
+
+
+    /*
+    * convert number EX: 1000 -> 1k
+    * */
+    fun prettyCount(number: Number): String {
+        val suffix = charArrayOf(' ', 'k', 'M', 'B', 'T', 'P', 'E')
+        val numValue = number.toLong()
+        val value = floor(log10(numValue.toDouble())).toInt()
+        val base = value / 3
+        return if (value >= 3 && base < suffix.size) {
+            DecimalFormat("#0.0").format(
+                numValue / 10.0.pow((base * 3).toDouble())
+            ) + suffix[base]
+        } else {
+            DecimalFormat("#,##0").format(numValue)
+        }
+    }
+
+    fun getMaxValue(lsBarEntries: ArrayList<BarEntry>): Float {
+        var maxValue = 0f
+        lsBarEntries.forEachIndexed { _, barEntry ->
+            if (barEntry.y > maxValue) {
+                maxValue = barEntry.y
+            }
+        }
+        return maxValue
     }
 }

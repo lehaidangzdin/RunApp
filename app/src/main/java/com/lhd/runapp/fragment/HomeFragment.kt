@@ -1,21 +1,23 @@
 package com.lhd.runapp.fragment
 
+import android.app.Activity
+import android.app.Application
+import android.content.Intent
 import android.os.Build
 import android.os.Bundle
 import android.util.Log
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
+import android.widget.Toast
 import androidx.annotation.RequiresApi
 import androidx.fragment.app.Fragment
 import androidx.fragment.app.FragmentTransaction
+import androidx.lifecycle.ViewModelProvider
 import com.google.android.gms.auth.api.signin.GoogleSignIn
-import com.google.android.gms.fitness.Fitness
 import com.google.android.gms.fitness.FitnessOptions
 import com.google.android.gms.fitness.data.DataType
-import com.google.android.gms.fitness.data.Field
 import com.google.android.material.tabs.TabLayout
-import com.lhd.runapp.FitRequestCode
 import com.lhd.runapp.R
 import com.lhd.runapp.adapter.ReceiveAdapter
 import com.lhd.runapp.customviews.MySeekBar
@@ -26,46 +28,59 @@ import com.lhd.runapp.fragment.fragChart.MonthFragment
 import com.lhd.runapp.fragment.fragChart.WeekFragment
 import com.lhd.runapp.interfacePresenter.HomeInterface
 import com.lhd.runapp.models.Receive
+import com.lhd.runapp.presenter.HomePresenter
+import com.lhd.runapp.presenter.IHomePresenter
+import com.lhd.runapp.utils.FitRequestCode
+import com.lhd.runapp.utils.HomeFactory
+import com.lhd.runapp.utils.Utils.fitnessOptions
+import com.lhd.runapp.utils.Utils.getAccount
 import kotlin.collections.ArrayList
 
 
 const val TAG = "abc"
 
-class HomeFragment(private val goToReceive: HomeInterface) : Fragment() {
+class HomeFragment(private val goToReceive: HomeInterface) : Fragment(), IHomePresenter {
 
     private lateinit var mBinding: FragmentHomeBinding
     private var myAdapter = ReceiveAdapter(arrayListOf(), 0)
-
-    //    private var lsReceive: ArrayList<Receive> = ArrayList()
     private var lsIconReceive = ArrayList<ReceiveSeekbar>()
 
-    private val fitnessOptions = FitnessOptions.builder()
-        .addDataType(DataType.TYPE_STEP_COUNT_CUMULATIVE)
-        .addDataType(DataType.TYPE_STEP_COUNT_DELTA)
-        .build()
+    private lateinit var viewModel: HomePresenter
 
     //
     private var fragment: Fragment? = null
 
-
+    @RequiresApi(Build.VERSION_CODES.O)
     override fun onCreateView(
         inflater: LayoutInflater, container: ViewGroup?,
         savedInstanceState: Bundle?
     ): View {
         mBinding = FragmentHomeBinding.inflate(inflater, container, false)
+        // viewModel
+        val factory = HomeFactory(requireActivity().application, this)
+        viewModel = ViewModelProvider(this, factory)[HomePresenter::class.java]
+        mBinding.homePresenter = viewModel
+        viewModel.checkPermission(requireActivity())
+        //
+        observerComponent()
+        setupMySeekBar()
+        setUpRcv()
+        Log.e(
+            TAG,
+            "onCreateView: ${GoogleSignIn.hasPermissions(getAccount(requireContext()), fitnessOptions)}",
+        )
         return mBinding.root
+    }
+
+    private fun observerComponent() {
+        viewModel.process.observe(viewLifecycleOwner) {
+            mBinding.mySeekBar.progress = it / 5000f
+        }
     }
 
     @RequiresApi(Build.VERSION_CODES.O)
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
-
-        replaceFragment(DayFragment())
-        setupMySeekBar()
-        checkPermission()
-        setupTabLayout()
-        setUpRcv()
-
         // listener
         with(mBinding) {
             tvViewAll.setOnClickListener {
@@ -90,45 +105,6 @@ class HomeFragment(private val goToReceive: HomeInterface) : Fragment() {
                 }
             })
         }
-    }
-
-
-    private fun getGoogleAccount() =
-        GoogleSignIn.getAccountForExtension(requireContext(), fitnessOptions)
-
-    @RequiresApi(Build.VERSION_CODES.O)
-    private fun checkPermission() {
-
-        if (!GoogleSignIn.hasPermissions(getGoogleAccount(), fitnessOptions)) {
-            GoogleSignIn.requestPermissions(
-                this,
-                FitRequestCode.GG_FIT_REQUEST_CODE.ordinal,
-                getGoogleAccount(),
-                fitnessOptions
-            )
-        } else {
-            getStepsByCurrentDay()
-        }
-    }
-
-    private fun getStepsByCurrentDay() {
-        Fitness.getHistoryClient(requireActivity(), getGoogleAccount())
-            .readDailyTotal(DataType.TYPE_STEP_COUNT_DELTA)
-            .addOnSuccessListener { dataSet ->
-                val total = when {
-                    dataSet.isEmpty -> 0
-                    else -> dataSet.dataPoints.first().getValue(Field.FIELD_STEPS).asInt()
-                }
-                Log.i(TAG, "Total steps: $total")
-                displayTotalSteps(total)
-            }
-            .addOnFailureListener { e ->
-                Log.w(TAG, "There was a problem getting the step count.", e)
-            }
-    }
-
-    private fun displayTotalSteps(total: Int) {
-        mBinding.numSteps.text = "$total"
     }
 
     /**
@@ -245,7 +221,6 @@ class HomeFragment(private val goToReceive: HomeInterface) : Fragment() {
 
                 override fun onTabReselected(tab: TabLayout.Tab?) {
                 }
-
             })
         }
     }
@@ -258,6 +233,11 @@ class HomeFragment(private val goToReceive: HomeInterface) : Fragment() {
         }
         ft.setTransition(FragmentTransaction.TRANSIT_FRAGMENT_OPEN)
         ft.commit()
+    }
+
+    override fun updateUi() {
+        setupTabLayout()
+        replaceFragment(DayFragment())
     }
 
 }

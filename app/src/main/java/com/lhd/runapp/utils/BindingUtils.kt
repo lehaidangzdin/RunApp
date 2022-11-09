@@ -1,9 +1,12 @@
 package com.lhd.runapp.utils
 
+import android.widget.AbsSeekBar
 import android.widget.ImageView
 import android.widget.TextView
 import androidx.databinding.BindingAdapter
+import com.lhd.runapp.customviews.MySeekBar
 import com.lhd.runapp.models.Receive
+import com.lhd.runapp.presenter.HomePresenter
 
 object BindingUtils {
     @JvmStatic

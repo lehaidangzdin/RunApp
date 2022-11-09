@@ -18,18 +18,13 @@ import com.google.android.gms.fitness.data.DataSource
 import com.google.android.gms.fitness.data.DataType
 import com.google.android.gms.fitness.data.DataType.TYPE_STEP_COUNT_DELTA
 import com.google.android.gms.fitness.request.DataReadRequest
-import com.lhd.runapp.FitRequestCode.GG_FIT_REQUEST_CODE
 import com.lhd.runapp.databinding.ActivityMain3Binding
+import com.lhd.runapp.utils.FitRequestCode
 import java.text.DateFormat
 import java.text.DateFormat.getDateInstance
 import java.util.*
 import java.util.concurrent.TimeUnit
 import kotlin.collections.ArrayList
-
-enum class FitRequestCode {
-    GG_FIT_REQUEST_CODE
-}
-
 class MainActivity3 : AppCompatActivity() {
 
     private lateinit var mBinding: ActivityMain3Binding
@@ -165,7 +160,7 @@ class MainActivity3 : AppCompatActivity() {
         if (!GoogleSignIn.hasPermissions(getAccount(), fitnessOptions)) {
             GoogleSignIn.requestPermissions(
                 this,
-                GG_FIT_REQUEST_CODE.ordinal,
+                FitRequestCode.GG_FIT_REQUEST_CODE.ordinal,
                 getAccount(),
                 fitnessOptions
             )
@@ -181,7 +176,7 @@ class MainActivity3 : AppCompatActivity() {
         super.onActivityResult(requestCode, resultCode, data)
         when (resultCode) {
             Activity.RESULT_OK -> when (requestCode) {
-                GG_FIT_REQUEST_CODE.ordinal -> accessGoogleFit()
+                FitRequestCode.GG_FIT_REQUEST_CODE.ordinal -> accessGoogleFit()
                 else -> {
                     // Result wasn't from Google Fit
                 }

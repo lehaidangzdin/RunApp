@@ -8,6 +8,10 @@
     <uses-permission android:name="android.gms.permission.ACCESS_FINE_LOCATION" />
     <uses-permission android:name="com.google.android.gms.permission.ACTIVITY_RECOGNITION" />
 
+    <uses-permission-sdk-23 android:name="android.gms.permission.ACTIVITY_RECOGNITION" />
+    <uses-permission-sdk-23 android:name="android.gms.permission.ACCESS_FINE_LOCATION" />
+    <uses-permission-sdk-23 android:name="com.google.android.gms.permission.ACTIVITY_RECOGNITION" />
+
     <application
         android:allowBackup="true"
         android:dataExtractionRules="@xml/data_extraction_rules"

@@ -7,7 +7,7 @@
     <!--    <string name="steps"><b>TODAY: 524/4000 steps</b></string>-->
     <string name="today">TODAY: </string>
     <string name="_4_000_steps"> /4.000 steps</string>
-    <string name="_500"> 500</string>
+    <string name="_500"> 0</string>
     <!--    -->
     <string name="day">Day</string>
     <string name="week">Week</string>

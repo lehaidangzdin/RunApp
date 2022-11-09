@@ -1,5 +1,6 @@
 package com.lhd.runapp.customviews
 
+import android.annotation.SuppressLint
 import android.content.Context
 import android.util.Log
 import android.widget.TextView
@@ -8,8 +9,10 @@ import com.github.mikephil.charting.data.Entry
 import com.github.mikephil.charting.highlight.Highlight
 import com.github.mikephil.charting.utils.MPPointF
 import com.lhd.runapp.R
+import com.lhd.runapp.utils.Utils
 
 
+@SuppressLint("ViewConstructor")
 class MyMarkerView(
     context: Context,
     layout: Int,
@@ -22,7 +25,7 @@ class MyMarkerView(
 
     override fun refreshContent(e: Entry?, highlight: Highlight?) {
         try {
-            tvContent?.text = "${e?.y?.toInt()}"
+            tvContent?.text = "${e?.y?.toInt()?.let { Utils.prettyCount(it) }}"
         } catch (e: IndexOutOfBoundsException) {
             Log.e("MyMarkerView", "refreshContent: ${e.message}")
         }

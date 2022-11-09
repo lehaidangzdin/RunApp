@@ -20,17 +20,21 @@ import com.lhd.runapp.interfacePresenter.HomeInterface
 class MainActivity : AppCompatActivity(), HomeInterface {
     private lateinit var mBinding: ActivityMainBinding
     private lateinit var permissionLauncher: ActivityResultLauncher<Array<String>>
+
     private var isPermissionRecognitionGranted = false
+    private var isPermissionLocation = false
 
     @RequiresApi(Build.VERSION_CODES.Q)
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         mBinding = DataBindingUtil.setContentView(this, R.layout.activity_main)
 
+        //
         permissionLauncher =
             registerForActivityResult(ActivityResultContracts.RequestMultiplePermissions()) {
                 isPermissionRecognitionGranted =
                     it[Manifest.permission.ACTIVITY_RECOGNITION] ?: isPermissionRecognitionGranted
+                it[Manifest.permission.ACCESS_FINE_LOCATION] ?: isPermissionLocation
             }
         requestPermission()
 
@@ -74,15 +78,16 @@ class MainActivity : AppCompatActivity(), HomeInterface {
             this@MainActivity,
             Manifest.permission.ACTIVITY_RECOGNITION
         ) == PackageManager.PERMISSION_GRANTED
+
         val permissionRequest: MutableList<String> = ArrayList()
         if (!isPermissionRecognitionGranted) {
             permissionRequest.add(Manifest.permission.ACTIVITY_RECOGNITION)
+        }
+        if (!isPermissionLocation) {
+            permissionRequest.add(Manifest.permission.ACCESS_FINE_LOCATION)
         }
         if (permissionRequest.isNotEmpty()) {
             permissionLauncher.launch(permissionRequest.toTypedArray())
         }
     }
-
-
-
 }

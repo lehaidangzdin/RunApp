@@ -40,7 +40,7 @@ class MySeekBar(context: Context, attrs: AttributeSet) : View(context, attrs) {
     private lateinit var listener: OnClickBitmapReceive
 
 
-    private var progress = 1F // From float from 0 to 1
+    var progress = 1F // From float from 0 to 1
         set(state) {
             field = state
             invalidate()
@@ -63,7 +63,7 @@ class MySeekBar(context: Context, attrs: AttributeSet) : View(context, attrs) {
             textThumbnailSize =
                 getFloat(R.styleable.IndicatorProgressBar_textThumbnailSize, textThumbnailSize)
             barHeight = getFloat(R.styleable.IndicatorProgressBar_barHeight, barHeight)
-            progress = getFloat(R.styleable.IndicatorProgressBar_progress, progress)
+//            progress = getFloat(R.styleable.IndicatorProgressBar_progress, progress)
             progressColor = getColor(R.styleable.IndicatorProgressBar_progressColor, progressColor)
             textThumbnail =
                 getColor(R.styleable.IndicatorProgressBar_indicatorThumbnailColor, textThumbnail)
@@ -208,7 +208,7 @@ class MySeekBar(context: Context, attrs: AttributeSet) : View(context, attrs) {
         val bitmap = BitmapFactory.decodeResource(resources, icon)
 
         if (bitmap != null) {
-            bitmapConvert = Utils.resizeBitmap(bitmap, 50, 35)
+            bitmapConvert = Utils.resizeBitmap(bitmap, 60, 40)
             canvas.drawBitmap(bitmapConvert, leftPositionBitmap, topPositionBitmap, paintBitmap)
         }
 
