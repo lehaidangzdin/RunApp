@@ -1,22 +1,16 @@
 package com.lhd.runapp.fragment
 
-import android.app.Activity
-import android.app.Application
-import android.content.Intent
 import android.os.Build
 import android.os.Bundle
 import android.util.Log
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
-import android.widget.Toast
 import androidx.annotation.RequiresApi
 import androidx.fragment.app.Fragment
 import androidx.fragment.app.FragmentTransaction
 import androidx.lifecycle.ViewModelProvider
 import com.google.android.gms.auth.api.signin.GoogleSignIn
-import com.google.android.gms.fitness.FitnessOptions
-import com.google.android.gms.fitness.data.DataType
 import com.google.android.material.tabs.TabLayout
 import com.lhd.runapp.R
 import com.lhd.runapp.adapter.ReceiveAdapter
@@ -29,9 +23,6 @@ import com.lhd.runapp.fragment.fragChart.WeekFragment
 import com.lhd.runapp.interfacePresenter.HomeInterface
 import com.lhd.runapp.models.Receive
 import com.lhd.runapp.presenter.HomePresenter
-import com.lhd.runapp.presenter.IHomePresenter
-import com.lhd.runapp.utils.FitRequestCode
-import com.lhd.runapp.utils.HomeFactory
 import com.lhd.runapp.utils.Utils.fitnessOptions
 import com.lhd.runapp.utils.Utils.getAccount
 import kotlin.collections.ArrayList
@@ -39,7 +30,7 @@ import kotlin.collections.ArrayList
 
 const val TAG = "abc"
 
-class HomeFragment(private val goToReceive: HomeInterface) : Fragment(), IHomePresenter {
+class HomeFragment(private val goToReceive: HomeInterface) : Fragment() {
 
     private lateinit var mBinding: FragmentHomeBinding
     private var myAdapter = ReceiveAdapter(arrayListOf(), 0)
@@ -57,12 +48,13 @@ class HomeFragment(private val goToReceive: HomeInterface) : Fragment(), IHomePr
     ): View {
         mBinding = FragmentHomeBinding.inflate(inflater, container, false)
         // viewModel
-        val factory = HomeFactory(requireActivity().application, this)
-        viewModel = ViewModelProvider(this, factory)[HomePresenter::class.java]
+//        val factory = HomeFactory(requireActivity().application, this)
+        viewModel = ViewModelProvider(this)[HomePresenter::class.java]
         mBinding.homePresenter = viewModel
         viewModel.checkPermission(requireActivity())
         //
         observerComponent()
+        setUpUI()
         setupMySeekBar()
         setUpRcv()
         Log.e(
@@ -235,7 +227,7 @@ class HomeFragment(private val goToReceive: HomeInterface) : Fragment(), IHomePr
         ft.commit()
     }
 
-    override fun updateUi() {
+    fun setUpUI() {
         setupTabLayout()
         replaceFragment(DayFragment())
     }

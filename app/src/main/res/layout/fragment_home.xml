@@ -4,6 +4,7 @@
     xmlns:tools="http://schemas.android.com/tools">
 
     <data>
+
         <variable
             name="homePresenter"
             type="com.lhd.runapp.presenter.HomePresenter" />

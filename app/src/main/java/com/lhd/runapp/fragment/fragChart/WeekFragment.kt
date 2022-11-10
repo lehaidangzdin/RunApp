@@ -10,6 +10,7 @@ import com.lhd.runapp.R
 import com.lhd.runapp.customviews.MyMarkerView
 import com.lhd.runapp.customviews.SetupChart
 import com.lhd.runapp.databinding.FragmentWeekBinding
+import dagger.hilt.android.AndroidEntryPoint
 
 class WeekFragment : Fragment() {
 

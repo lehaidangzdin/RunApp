@@ -13,7 +13,6 @@ import com.github.mikephil.charting.formatter.IndexAxisValueFormatter
 import com.github.mikephil.charting.formatter.LargeValueFormatter
 import com.github.mikephil.charting.model.GradientColor
 import com.lhd.runapp.R
-import com.lhd.runapp.utils.Utils
 import com.lhd.runapp.utils.Utils.getMaxValue
 
 

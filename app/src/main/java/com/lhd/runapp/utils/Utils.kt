@@ -8,6 +8,8 @@ import com.google.android.gms.auth.api.signin.GoogleSignIn
 import com.google.android.gms.fitness.FitnessOptions
 import com.google.android.gms.fitness.data.DataType
 import java.text.DecimalFormat
+import java.util.*
+import kotlin.collections.ArrayList
 import kotlin.math.floor
 import kotlin.math.log10
 import kotlin.math.pow
@@ -69,5 +71,14 @@ object Utils {
             }
         }
         return maxValue
+    }
+
+    fun getTimeNow(): Date {
+        val cal = Calendar.getInstance()
+        cal.time = Date()
+        cal[Calendar.HOUR_OF_DAY] = 0
+        cal[Calendar.MINUTE] = 0
+        cal[Calendar.SECOND] = 0
+        return Date(cal.timeInMillis)
     }
 }

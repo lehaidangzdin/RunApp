@@ -6,6 +6,7 @@ import android.view.View
 import android.view.ViewGroup
 import androidx.fragment.app.Fragment
 import com.lhd.runapp.R
+import dagger.hilt.android.AndroidEntryPoint
 
 class EventFragment : Fragment() {
 

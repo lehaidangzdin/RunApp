@@ -15,6 +15,8 @@ import com.lhd.runapp.adapter.ReceiveAdapter
 import com.lhd.runapp.databinding.DialogBinding
 import com.lhd.runapp.databinding.FragmentReceiveBinding
 import com.lhd.runapp.models.Receive
+import dagger.hilt.android.AndroidEntryPoint
+
 
 class ReceiveFragment : Fragment() {
 

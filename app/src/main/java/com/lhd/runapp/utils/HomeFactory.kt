@@ -4,14 +4,13 @@ import android.app.Application
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.ViewModelProvider
 import com.lhd.runapp.presenter.HomePresenter
-import com.lhd.runapp.presenter.IHomePresenter
 
 
-class HomeFactory constructor(
+class HomeFactory(
     private val application: Application,
-    private val iHomePresenter: IHomePresenter
+//    private val iHomePresenter: IHomePresenter
 ) : ViewModelProvider.Factory {
-    override fun <T : ViewModel> create(modelClass: Class<T>): T {
-        return HomePresenter(application, iHomePresenter) as T
-    }
+//    override fun <T : ViewModel> create(modelClass: Class<T>): T {
+//        return HomePresenter(application, iHomePresenter) as T
+//    }
 }

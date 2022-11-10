@@ -1,9 +1,11 @@
 package com.lhd.runapp
 
 import android.Manifest
+import android.content.Intent
 import android.content.pm.PackageManager
 import android.os.Build
 import android.os.Bundle
+import android.widget.Toast
 import androidx.activity.result.ActivityResultLauncher
 import androidx.activity.result.contract.ActivityResultContracts
 import androidx.annotation.RequiresApi
@@ -11,11 +13,14 @@ import androidx.appcompat.app.AppCompatActivity
 import androidx.core.content.ContextCompat
 import androidx.databinding.DataBindingUtil
 import androidx.fragment.app.Fragment
+import androidx.lifecycle.ViewModelProvider
 import com.lhd.runapp.databinding.ActivityMainBinding
 import com.lhd.runapp.fragment.EventFragment
 import com.lhd.runapp.fragment.HomeFragment
 import com.lhd.runapp.fragment.ReceiveFragment
 import com.lhd.runapp.interfacePresenter.HomeInterface
+import com.lhd.runapp.presenter.HomePresenter
+import com.lhd.runapp.utils.FitRequestCode
 
 class MainActivity : AppCompatActivity(), HomeInterface {
     private lateinit var mBinding: ActivityMainBinding
@@ -24,12 +29,16 @@ class MainActivity : AppCompatActivity(), HomeInterface {
     private var isPermissionRecognitionGranted = false
     private var isPermissionLocation = false
 
+    private lateinit var viewModel: HomePresenter
+
     @RequiresApi(Build.VERSION_CODES.Q)
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         mBinding = DataBindingUtil.setContentView(this, R.layout.activity_main)
 
+        viewModel = ViewModelProvider(this)[HomePresenter::class.java]
         //
+
         permissionLauncher =
             registerForActivityResult(ActivityResultContracts.RequestMultiplePermissions()) {
                 isPermissionRecognitionGranted =
@@ -69,7 +78,6 @@ class MainActivity : AppCompatActivity(), HomeInterface {
         val fragmentTransient = fragmentManager.beginTransaction()
 
         fragmentTransient.replace(R.id.frame, fragment).commit()
-//        fragmentTransient.commit()
     }
 
     @RequiresApi(Build.VERSION_CODES.Q)
@@ -90,4 +98,17 @@ class MainActivity : AppCompatActivity(), HomeInterface {
             permissionLauncher.launch(permissionRequest.toTypedArray())
         }
     }
+
+    @Deprecated("Deprecated in Java")
+    @RequiresApi(Build.VERSION_CODES.O)
+    override fun onActivityResult(requestCode: Int, resultCode: Int, data: Intent?) {
+        super.onActivityResult(requestCode, resultCode, data)
+        if (requestCode == FitRequestCode.GG_FIT_REQUEST_CODE.ordinal) {
+//            Toast.makeText(this, "GG sign in request code $requestCode", Toast.LENGTH_SHORT).show()
+            reFragment(HomeFragment(this))
+        }
+
+    }
+
+
 }
