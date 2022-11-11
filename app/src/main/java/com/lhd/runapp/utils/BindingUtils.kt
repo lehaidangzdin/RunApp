@@ -1,5 +1,6 @@
 package com.lhd.runapp.utils
 
+import android.annotation.SuppressLint
 import android.widget.AbsSeekBar
 import android.widget.ImageView
 import android.widget.TextView
@@ -27,6 +28,7 @@ object BindingUtils {
         }
     }
 
+    @SuppressLint("SetTextI18n")
     @JvmStatic
     @BindingAdapter("android:showText")
     fun showText(tv: TextView, item: Receive) {
@@ -35,7 +37,7 @@ object BindingUtils {
         if (progressAfter / maxAfter < 1) {
             tv.text = "${item.progress}k/${item.max}k"
         } else {
-            tv.text = "${item.date}"
+            tv.text = item.date
         }
     }
 

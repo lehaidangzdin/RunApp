@@ -10,28 +10,39 @@ import android.widget.Toast
 import androidx.annotation.RequiresApi
 import androidx.appcompat.app.AppCompatActivity
 import androidx.databinding.DataBindingUtil
+import com.github.mikephil.charting.data.BarEntry
 import com.google.android.gms.auth.api.signin.GoogleSignIn
 import com.google.android.gms.fitness.Fitness
 import com.google.android.gms.fitness.FitnessOptions
 import com.google.android.gms.fitness.data.DataSet
-import com.google.android.gms.fitness.data.DataSource
 import com.google.android.gms.fitness.data.DataType
 import com.google.android.gms.fitness.data.DataType.TYPE_STEP_COUNT_DELTA
-import com.google.android.gms.fitness.request.DataReadRequest
 import com.lhd.runapp.databinding.ActivityMain3Binding
 import com.lhd.runapp.utils.FitRequestCode
+import com.lhd.runapp.utils.Utils.getReadRequestData
 import java.text.DateFormat
-import java.text.DateFormat.getDateInstance
+import java.text.SimpleDateFormat
+import java.time.YearMonth
 import java.util.*
 import java.util.concurrent.TimeUnit
-import kotlin.collections.ArrayList
+
 class MainActivity3 : AppCompatActivity() {
 
     private lateinit var mBinding: ActivityMain3Binding
 
     private var ls: ArrayList<DataSet> = ArrayList()
-    private var lsDay: ArrayList<String> = ArrayList()
-    private var stepByMonth = 0
+    private var lsNameMonth: ArrayList<String> = ArrayList()
+    private var lsData: ArrayList<BarEntry> = ArrayList()
+
+    @SuppressLint("SimpleDateFormat")
+    private val formatter = SimpleDateFormat("dd")
+
+    @SuppressLint("SimpleDateFormat")
+    private val sdf = SimpleDateFormat("dd/MM/yyyy")
+    private val date = Date()
+    private val cal = Calendar.getInstance()
+    private val currentYear = cal[Calendar.YEAR]
+    private val currentMonth = cal[Calendar.MONTH] + 1
 
     private val fitnessOptions: FitnessOptions by lazy {
         FitnessOptions.builder()
@@ -54,94 +65,75 @@ class MainActivity3 : AppCompatActivity() {
         GoogleSignIn.getAccountForExtension(this, fitnessOptions)
 
     //
+    @SuppressLint("SimpleDateFormat")
     @RequiresApi(Build.VERSION_CODES.O)
     private fun accessGoogleFit() {
+        for (i in 1..currentMonth) {
+            var totalMonth = 0
+            // lấy số ngày theo tháng
+            val yearMonthObject = YearMonth.of(currentYear, i);
+            val daysInMonth = yearMonthObject.lengthOfMonth()
+            Log.e(TAG, "accessGoogleFit: start month: $i - current month: $currentMonth")
+            Log.e(TAG, "accessGoogleFit: so ngay trong thang $i la: $daysInMonth")
 
-
-        // lấy step tuần trc
-//        val cal = Calendar.getInstance()
-//        cal.time = Date()
-//        cal[Calendar.HOUR_OF_DAY] = 0
-//        cal[Calendar.MINUTE] = 0
-//        cal[Calendar.SECOND] = 0
-//        val endTime = cal.timeInMillis
-//
-//        cal.add(Calendar.WEEK_OF_MONTH, -1)
-//        cal[Calendar.HOUR_OF_DAY] = 0
-//        cal[Calendar.MINUTE] = 0
-//        cal[Calendar.SECOND] = 0
-//        val startTime = cal.timeInMillis
-//        Log.i(TAG, endTime.toString())
-//        Log.i(TAG, startTime.toString())
-
-
-//       lấy step từ 6 ngày trc đên hôm nay
-        val cal = Calendar.getInstance()
-        val now = Date()
-        cal.time = now
-        val endTime = cal.timeInMillis
-        cal.add(Calendar.WEEK_OF_YEAR, -1)
-        val startTime = cal.timeInMillis
-
-        val dateFormat: DateFormat = getDateInstance()
-        Log.i(TAG, "Range Start: " + dateFormat.format(startTime))
-        Log.i(TAG, "Range End: " + dateFormat.format(endTime))
-
-        //       lấy step theo ngày này tháng trc đên hôm nay
-//        val cal = Calendar.getInstance()
-//        val now = Date()
-//        cal.time = now
-//        val endTime = cal.timeInMillis
-//        cal.add(Calendar.MONTH, -1)
-//        val startTime = cal.timeInMillis
-//
-//        val dateFormat: DateFormat = getDateInstance()
-//        Log.i(TAG, "Range Start: " + dateFormat.format(startTime))
-//        Log.i(TAG, "Range End: " + dateFormat.format(endTime))
-
-        val ESTIMATED_STEP_DELTAS: DataSource = DataSource.Builder()
-            .setDataType(TYPE_STEP_COUNT_DELTA)
-            .setType(DataSource.TYPE_DERIVED)
-            .setStreamName("estimated_steps")
-            .setAppPackageName("com.google.android.gms")
-            .build()
-
-        val readRequest = DataReadRequest.Builder()
-            .aggregate(ESTIMATED_STEP_DELTAS, DataType.AGGREGATE_STEP_COUNT_DELTA)
-            .setTimeRange(startTime, endTime, TimeUnit.MILLISECONDS)
-            .bucketByTime(1, TimeUnit.DAYS)
-            .build()
-
-
-        Fitness.getHistoryClient(this, getAccount())
-            .readData(readRequest)
-            .addOnSuccessListener { response ->
-
-                for (bucket in response.buckets) {
-                    //convert days in bucket to milliseconds
-                    val days = bucket.getStartTime(TimeUnit.MILLISECONDS)
-                    //convert milliseconds to date
-                    val stepsDate = Date(days)
-                    //convert date to day of the week eg: monday, tuesday etc
-//                    @SuppressLint("SimpleDateFormat")
-//                    val df: DateFormat = SimpleDateFormat("EEE")
-//                    val weekday = df.format(stepsDate)
-//                    Log.i(TAG, stepsDate.toString())
-                    // add day vao ls
-                    lsDay.add(stepsDate.toString().substring(0, 4))
-                    Log.e(TAG, "accessGoogleFit: ${stepsDate.toString().substring(0, 4)}")
-
-                    for (dataSet in bucket.dataSets) {
-                        stepByMonth += dumpDataSet(dataSet)
-                        Log.e(TAG, "accessGoogleFit: ${dumpDataSet(dataSet)}")
-                    }
-                }
-                Log.i(TAG, "$stepByMonth")
-                Log.i(TAG, ls.toString())
+            // set starttime = 01/01/{năm hiện tại}
+            val startDate = "01/${i}/${currentYear}"
+            cal[Calendar.HOUR_OF_DAY] = 0
+            cal[Calendar.MINUTE] = 0
+            cal[Calendar.SECOND] = 0
+            cal.time = sdf.parse(startDate)!!
+            val startTime = cal.timeInMillis
+            // end time
+            if (i == currentMonth) {
+                cal.time = Date()
+            } else {
+                val endDate = "${daysInMonth}/${i}/${currentYear}"
+                cal.time = sdf.parse(endDate)!!
             }
-            .addOnFailureListener { e -> Log.d(TAG, "OnFailure()", e) }
+            cal[Calendar.HOUR_OF_DAY] = 0
+            cal[Calendar.MINUTE] = 0
+            cal[Calendar.SECOND] = 0
+            val endTime = cal.timeInMillis
+
+            // loge time
+            val dateFormat: DateFormat = DateFormat.getDateInstance()
+            Log.i(TAG, "end time: ${dateFormat.format(endTime)}")
+            Log.i(TAG, "start time: ${dateFormat.format(startTime)}")
+
+            // add month  vao ls
+            Fitness.getHistoryClient(this, getAccount())
+                .readData(getReadRequestData(startTime, endTime))
+                .addOnSuccessListener { response ->
+                    // 1 thang
+                    for (bucket in response.buckets) {
+                        var total = 0
+                        //convert days in bucket to milliseconds
+                        val days = bucket.getStartTime(TimeUnit.MILLISECONDS)
+                        //convert milliseconds to date
+                        val stepsDate = Date(days)
+                        Log.e(TAG, "accessGoogleFit: $i - $stepsDate")
+//                        step trong 1 ngay
+                        for (dataSet in bucket.dataSets) {
+                            total += dumpDataSet(dataSet)
+                            Log.e(TAG, "accessGoogleFit: ${dumpDataSet(dataSet)}")
+                        }
+                        totalMonth += total
+                        lsNameMonth.add(endTime.toString().substring(0, 4))
+                        lsData.add(BarEntry(i.toFloat(), totalMonth.toFloat()))
+                    }
+                    lsNameMonth.add(i.toString().substring(0, 4))
+                    lsData.add(BarEntry(i.toFloat(), totalMonth.toFloat()))
+//                    Log.e(TAG, "accessGoogleFit: total $i ------$totalMonth")
+                    displayChart(lsNameMonth, lsData)
+                }
+                .addOnFailureListener { e -> Log.d(TAG, "OnFailure()", e) }
+
+        }
     }
 
+    private fun displayChart(lsNameMonth: ArrayList<String>, lsData: ArrayList<BarEntry>) {
+
+    }
 
     private fun dumpDataSet(dataSet: DataSet): Int {
         var totalSteps = 0;

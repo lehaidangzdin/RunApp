@@ -16,7 +16,7 @@ import com.lhd.runapp.utils.Utils
 class MySeekBar(context: Context, attrs: AttributeSet) : View(context, attrs) {
     private var barColor = Color.GRAY
     private var textThumbnailSize = 20f
-    private var barHeight = 20F
+    private var barHeight = 24F
     private var indicatorColor = Color.CYAN
     private var progressColor = Color.GREEN
     private var textThumbnail = Color.WHITE
@@ -24,9 +24,9 @@ class MySeekBar(context: Context, attrs: AttributeSet) : View(context, attrs) {
     private val paintBitmap = Paint()
     private var processWidth = 0f
     private val indicatorBitmap =
-        listOf(0, R.drawable.check, R.drawable.check, R.drawable.starcheck)
+        listOf(0, R.drawable.check, R.drawable.check, R.drawable.star)
     private val indicatorBitmapCheck =
-        listOf(0, R.drawable.check_, R.drawable.check_, R.drawable.star_check_)
+        listOf(0, R.drawable.check_selected, R.drawable.check_selected, R.drawable.star_selected)
 //    private val radiusCir = 25f
 
     lateinit var indicatorPositions: List<Float>
@@ -87,7 +87,6 @@ class MySeekBar(context: Context, attrs: AttributeSet) : View(context, attrs) {
         drawProgress(canvas)
         drawIndicators(canvas)
     }
-
 
     /**
      * ve bg seekbar
@@ -160,7 +159,6 @@ class MySeekBar(context: Context, attrs: AttributeSet) : View(context, attrs) {
         val barTop = (measuredHeight - barHeight) / 2
         val barBottom = ((measuredHeight + barHeight) / 2)
         val center = (barTop + barBottom) / 2
-
         if (ls[index] == 0) {
             // neu element = 0 => ve hinh tron do
             paint.color = Color.RED
@@ -184,7 +182,7 @@ class MySeekBar(context: Context, attrs: AttributeSet) : View(context, attrs) {
         val marginTop = getRadiusCir() * 2f
         var marginLeft = 0f
         if (i == 0) {
-            marginLeft = (getRadiusCir() / 2f)
+            marginLeft = (getRadiusCir() / 2.5f)
         }
         canvas.drawText(indicatorText[i], left + marginLeft, bottomT + marginTop, paint)
     }
@@ -202,13 +200,13 @@ class MySeekBar(context: Context, attrs: AttributeSet) : View(context, attrs) {
         val barBottom = (measuredHeight - barHeight) / 2
         val marginTop = getRadiusCir() * 4f
         val topPositionBitmap = barBottom + marginTop
-        val leftPositionBitmap = leftDefault - 60f / 4.5f
+        val leftPositionBitmap = leftDefault - 55f / 2.5f
 
         // neu element != 0 => ve hinh receive
         val bitmap = BitmapFactory.decodeResource(resources, icon)
 
         if (bitmap != null) {
-            bitmapConvert = Utils.resizeBitmap(bitmap, 60, 40)
+            bitmapConvert = Utils.resizeBitmap(bitmap, 55, 40)
             canvas.drawBitmap(bitmapConvert, leftPositionBitmap, topPositionBitmap, paintBitmap)
         }
 

@@ -63,6 +63,8 @@ class SetupChart(
             marker = mv
             isDoubleTapToZoomEnabled = false
             animateY(3000, Easing.EaseOutBack)
+            isSelected = true
+            extraBottomOffset = 10f
 //            renderer = myBarChartRender
             setTouchEnabled(true)
             setScaleEnabled(false)
@@ -70,7 +72,7 @@ class SetupChart(
         }
         // setup cot y ben trai
         var maxValue = maxYValue
-        if (getMaxValue(lsBarEntries) >= 4000f) {
+        if (getMaxValue(lsBarEntries) >= maxYValue) {
             maxValue = getMaxValue(lsBarEntries)
         }
         barChart.axisLeft.apply {

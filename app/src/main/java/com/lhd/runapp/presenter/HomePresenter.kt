@@ -13,12 +13,11 @@ import com.github.mikephil.charting.data.BarEntry
 import com.google.android.gms.auth.api.signin.GoogleSignIn
 import com.google.android.gms.fitness.Fitness
 import com.google.android.gms.fitness.data.DataSet
-import com.google.android.gms.fitness.data.DataSource
 import com.google.android.gms.fitness.data.DataType
 import com.google.android.gms.fitness.data.Field
-import com.google.android.gms.fitness.request.DataReadRequest
 import com.lhd.runapp.models.DataChart
 import com.lhd.runapp.utils.FitRequestCode
+import com.lhd.runapp.utils.Utils
 import com.lhd.runapp.utils.Utils.fitnessOptions
 import com.lhd.runapp.utils.Utils.getAccount
 import com.lhd.runapp.utils.Utils.getTimeNow
@@ -128,21 +127,8 @@ class HomePresenter(
         Log.i(TAG, "aaaaaaaaa -${dateFormat.format(startTime)}")
         Log.i(TAG, "getStepsByWeek: ${Date(endTime)}")
 
-        val estimatedStepDeltas: DataSource = DataSource.Builder()
-            .setDataType(DataType.TYPE_STEP_COUNT_DELTA)
-            .setType(DataSource.TYPE_DERIVED)
-            .setStreamName("estimated_steps")
-            .setAppPackageName("com.google.android.gms")
-            .build()
-
-        val readRequest = DataReadRequest.Builder()
-            .aggregate(estimatedStepDeltas, DataType.AGGREGATE_STEP_COUNT_DELTA)
-            .setTimeRange(startTime, endTime, TimeUnit.MILLISECONDS)
-            .bucketByTime(1, TimeUnit.DAYS)
-            .build()
-
         Fitness.getHistoryClient(context, getAccount(context))
-            .readData(readRequest)
+            .readData(Utils.getReadRequestData(startTime, endTime))
             .addOnSuccessListener { response ->
                 for (bucket in response.buckets) {
                     //convert days in bucket to milliseconds

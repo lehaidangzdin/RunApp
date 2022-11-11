@@ -15,6 +15,10 @@
             android:layout_width="match_parent"
             android:layout_height="@dimen/dimen_400"
             android:layout_centerInParent="true"
+            android:layout_marginStart="@dimen/dimen_4"
+            android:layout_marginTop="@dimen/dimen_4"
+            android:layout_marginEnd="@dimen/dimen_4"
+            android:layout_marginBottom="@dimen/dimen_4"
             android:paddingBottom="@dimen/dimen_8" />
 
     </RelativeLayout>

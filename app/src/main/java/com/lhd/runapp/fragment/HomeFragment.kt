@@ -35,7 +35,6 @@ class HomeFragment(private val goToReceive: HomeInterface) : Fragment() {
     private lateinit var mBinding: FragmentHomeBinding
     private var myAdapter = ReceiveAdapter(arrayListOf(), 0)
     private var lsIconReceive = ArrayList<ReceiveSeekbar>()
-
     private lateinit var viewModel: HomePresenter
 
     //
@@ -66,7 +65,7 @@ class HomeFragment(private val goToReceive: HomeInterface) : Fragment() {
 
     private fun observerComponent() {
         viewModel.process.observe(viewLifecycleOwner) {
-            mBinding.mySeekBar.progress = it / 5000f
+            mBinding.mySeekBar.progress = it / 4500f
         }
     }
 
@@ -113,7 +112,7 @@ class HomeFragment(private val goToReceive: HomeInterface) : Fragment() {
      */
     private fun setupMySeekBar() {
         addIconReceive()
-        mBinding.mySeekBar.indicatorPositions = listOf(0F, 0.1F, 0.3F, 0.8F)
+        mBinding.mySeekBar.indicatorPositions = listOf(0F, 0.11F, 0.25F, 0.89F)
         mBinding.mySeekBar.indicatorText = listOf("0", "500", "1000", "4000")
         mBinding.mySeekBar.indicatorBitmapReceive = lsIconReceive
     }
