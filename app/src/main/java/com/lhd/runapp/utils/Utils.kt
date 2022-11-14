@@ -13,15 +13,14 @@ import com.google.android.gms.fitness.request.DataReadRequest
 import java.text.DecimalFormat
 import java.util.*
 import java.util.concurrent.TimeUnit
-import kotlin.collections.ArrayList
 import kotlin.math.floor
 import kotlin.math.log10
 import kotlin.math.pow
 
 object Utils {
 
-    fun dumpDataSet(dataSet: DataSet): Int {
-        var totalSteps = 0;
+    fun dumpDataSet(dataSet: DataSet): Float {
+        var totalSteps = 0f
         for (dp in dataSet.dataPoints) {
             for (field in dp.dataType.fields) {
                 totalSteps += dp.getValue(field).asInt()
@@ -109,6 +108,16 @@ object Utils {
         cal[Calendar.MINUTE] = 0
         cal[Calendar.SECOND] = 0
         return Date(cal.timeInMillis)
+    }
+
+
+    fun getFirstMonday(year: Int, month: Int): Int {
+        val cacheCalendar = Calendar.getInstance()
+        cacheCalendar[Calendar.DAY_OF_WEEK] = Calendar.MONDAY
+        cacheCalendar[Calendar.DAY_OF_WEEK_IN_MONTH] = 1
+        cacheCalendar[Calendar.MONTH] = month
+        cacheCalendar[Calendar.YEAR] = year
+        return cacheCalendar[Calendar.DATE]
     }
 
 

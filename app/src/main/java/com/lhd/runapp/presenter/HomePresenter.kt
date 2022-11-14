@@ -18,6 +18,7 @@ import com.google.android.gms.fitness.data.Field
 import com.lhd.runapp.models.DataChart
 import com.lhd.runapp.utils.FitRequestCode
 import com.lhd.runapp.utils.Utils
+import com.lhd.runapp.utils.Utils.dumpDataSet
 import com.lhd.runapp.utils.Utils.fitnessOptions
 import com.lhd.runapp.utils.Utils.getAccount
 import com.lhd.runapp.utils.Utils.getTimeNow
@@ -100,6 +101,7 @@ class HomePresenter(
             .addOnFailureListener { e ->
                 Log.w(TAG, "There was a problem getting the step count.", e)
             }
+            
     }
 
     @RequiresApi(Build.VERSION_CODES.O)
@@ -137,7 +139,7 @@ class HomePresenter(
                     val stepsDate = Date(days)
                     // add day vao ls
                     lsXAxis.add(stepsDate.toString().substring(0, 4))
-                    Log.e(com.lhd.runapp.fragment.fragChart.TAG, "accessGoogleFit: $stepsDate")
+//                    Log.e(com.lhd.runapp.fragment.fragChart.TAG, "accessGoogleFit: $stepsDate")
                     xFloat++
                     for (dataSet in bucket.dataSets) {
                         lsBarEntry.add(
@@ -146,10 +148,10 @@ class HomePresenter(
                                 dumpDataSet(dataSet)
                             )
                         )
-                        Log.e(
-                            com.lhd.runapp.fragment.fragChart.TAG,
-                            "accessGoogleFit: ${dumpDataSet(dataSet)}"
-                        )
+//                        Log.e(
+//                            com.lhd.runapp.fragment.fragChart.TAG,
+//                            "accessGoogleFit: ${dumpDataSet(dataSet)}"
+//                        )
                     }
                 }
                 getStepsByCurrentDay(lsXAxis, lsBarEntry)
@@ -158,16 +160,6 @@ class HomePresenter(
             .addOnFailureListener { e ->
                 Log.d(com.lhd.runapp.fragment.fragChart.TAG, "OnFailure()", e)
             }
-    }
-
-    private fun dumpDataSet(dataSet: DataSet): Float {
-        var totalSteps = 0f
-        for (dp in dataSet.dataPoints) {
-            for (field in dp.dataType.fields) {
-                totalSteps += dp.getValue(field).asInt()
-            }
-        }
-        return totalSteps
     }
 
 

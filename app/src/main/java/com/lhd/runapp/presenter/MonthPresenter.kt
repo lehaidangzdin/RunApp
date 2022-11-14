@@ -5,19 +5,24 @@ import android.app.Application
 import android.os.Build
 import android.util.Log
 import androidx.annotation.RequiresApi
+import androidx.databinding.ObservableArrayList
 import androidx.lifecycle.AndroidViewModel
 import androidx.lifecycle.MutableLiveData
+import androidx.lifecycle.viewModelScope
 import com.github.mikephil.charting.data.BarEntry
 import com.google.android.gms.fitness.Fitness
 import com.lhd.runapp.models.DataChart
 import com.lhd.runapp.utils.Utils.dumpDataSet
 import com.lhd.runapp.utils.Utils.getAccount
 import com.lhd.runapp.utils.Utils.getReadRequestData
+import kotlinx.coroutines.Dispatchers
+import kotlinx.coroutines.launch
 import java.text.DateFormat
 import java.text.SimpleDateFormat
 import java.time.YearMonth
 import java.util.*
 import java.util.concurrent.TimeUnit
+import kotlin.collections.ArrayList
 
 @SuppressLint("SimpleDateFormat")
 class MonthPresenter(
@@ -28,6 +33,8 @@ class MonthPresenter(
     private val context = getApplication<Application>().applicationContext
 
     val dataChar = MutableLiveData<DataChart>()
+    private val lsAxis = ObservableArrayList<String>()
+    private val lsBarEntry = ObservableArrayList<BarEntry>()
 
     @SuppressLint("SimpleDateFormat")
     private val sdf = SimpleDateFormat("dd/MM/yyyy")
@@ -35,18 +42,18 @@ class MonthPresenter(
     private val currentYear = cal[Calendar.YEAR]
     private val currentMonth = cal[Calendar.MONTH] + 1
 
+    init {
+        lsAxis.add("")
+
+    }
 
     @SuppressLint("SimpleDateFormat")
     @RequiresApi(Build.VERSION_CODES.O)
     fun getStepsByMonth() {
-        val lsXAxis = ArrayList<String>()
-        val lsBarEntry = ArrayList<BarEntry>()
-        lsXAxis.add("")
+        for (i in 1..12) {
 
-        for (i in 1..currentMonth) {
-            var totalMonth = 0
             // lấy số ngày theo tháng
-            val yearMonthObject = YearMonth.of(currentYear, i);
+            val yearMonthObject = YearMonth.of(currentYear, i)
             val daysInMonth = yearMonthObject.lengthOfMonth()
             Log.e(TAG, "getStepsByMonth:  day in month $daysInMonth")
 
@@ -73,36 +80,49 @@ class MonthPresenter(
 
             // loge time
             val dateFormat: DateFormat = DateFormat.getDateInstance()
-            Log.i(com.lhd.runapp.TAG, "start time: ${dateFormat.format(startTimeReadRequest)}")
-            Log.i(com.lhd.runapp.TAG, "end time: ${dateFormat.format(endTimeReadRequest)}")
+            Log.i(TAG, "start time: ${dateFormat.format(startTimeReadRequest)}")
+            Log.i(TAG, "end time: ${dateFormat.format(endTimeReadRequest)}")
 
-            // add month  vao ls
-            Fitness.getHistoryClient(context.applicationContext, getAccount(context))
-                .readData(getReadRequestData(startTimeReadRequest, endTimeReadRequest))
-                .addOnSuccessListener { response ->
-                    // 1 thang
-                    //convert milliseconds to date
-                    val stepsDate = Date(response.buckets[0].getStartTime(TimeUnit.MILLISECONDS))
-                    for (bucket in response.buckets) {
-                        var total = 0
-//                        step trong 1 ngay
-                        for (dataSet in bucket.dataSets) {
-                            total +=
-                                dumpDataSet(dataSet)
-                        }
-                        totalMonth += total
-                    }
-                    Log.e(
-                        TAG,
-                        "getStepsByMonth: end time ${stepsDate.toString().substring(4, 7)}"
-                    )
-                    lsXAxis.add(stepsDate.toString().substring(4, 7))
-                    lsBarEntry.add(BarEntry(i.toFloat(), totalMonth.toFloat()))
-                    dataChar.value = DataChart(lsXAxis, lsBarEntry)
-                }
-                .addOnFailureListener { e -> Log.d(com.lhd.runapp.TAG, "OnFailure()", e) }
-//
+            getTotalStepByMonthThenAddToList(
+                startTimeReadRequest,
+                endTimeReadRequest,
+                i
+            )
+            // chờ get thông tin tháng xong r sang tháng tiếp theo
+            Thread.sleep(10)
         }
     }
+
+    private fun getTotalStepByMonthThenAddToList(
+        startTimeReadRequest: Long,
+        endTimeReadRequest: Long,
+        position: Int
+    ) {
+        // add month  vao ls
+        var totalMonth = 0f
+        Fitness.getHistoryClient(context.applicationContext, getAccount(context))
+            .readData(getReadRequestData(startTimeReadRequest, endTimeReadRequest))
+            .addOnSuccessListener { response ->
+                // 1 thang
+                //convert milliseconds to date
+                val stepsDate = Date(response.buckets[0].getStartTime(TimeUnit.MILLISECONDS))
+                for (bucket in response.buckets) {
+                    // step trong 1 ngay
+                    var totalDay = 0f
+                    for (dataSet in bucket.dataSets) {
+                        totalDay +=
+                            dumpDataSet(dataSet)
+                    }
+                    totalMonth += totalDay
+                }
+
+                Log.e(TAG, "getStepsByMonth: ${stepsDate.toString().substring(4, 7)}")
+                lsAxis.add(stepsDate.toString().substring(4, 7))
+                lsBarEntry.add(BarEntry(position.toFloat(), totalMonth))
+                dataChar.value = DataChart(lsAxis, lsBarEntry)
+            }
+            .addOnFailureListener { e -> Log.d(com.lhd.runapp.TAG, "OnFailure()", e) }
+    }
+
 
 }

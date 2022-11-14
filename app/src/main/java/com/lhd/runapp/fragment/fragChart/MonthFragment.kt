@@ -35,9 +35,7 @@ class MonthFragment : Fragment() {
 
     private fun observerComponent() {
         viewModel.dataChar.observe(viewLifecycleOwner) {
-//            if (it.lsBarEntry.size == 12) {
-                displayChart(it.lsAxis, it.lsBarEntry)
-//            }
+            displayChart(it.lsAxis, it.lsBarEntry)
         }
     }
 
@@ -45,7 +43,10 @@ class MonthFragment : Fragment() {
         lsAxis: ArrayList<String>,
         lsBarEntries: ArrayList<BarEntry>
     ) {
-        Log.e(TAG, "displayChart: ${lsAxis.size} - ${lsBarEntries.size}")
+//        for (i in lsAxis) {
+//            Log.e(TAG, "displayChart: data $i")
+//        }
+
         SetupChart(context, mBinding.barChart, lsBarEntries, lsAxis, 12000f)
             .applyOptions()
     }

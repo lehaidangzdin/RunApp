@@ -1,15 +1,20 @@
 package com.lhd.runapp.fragment.fragChart
 
+import android.os.Build
 import android.os.Bundle
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
+import androidx.annotation.RequiresApi
 import androidx.fragment.app.Fragment
+import androidx.lifecycle.ViewModelProvider
+import androidx.lifecycle.get
 import com.github.mikephil.charting.data.BarEntry
 import com.lhd.runapp.R
 import com.lhd.runapp.customviews.MyMarkerView
 import com.lhd.runapp.customviews.SetupChart
 import com.lhd.runapp.databinding.FragmentWeekBinding
+import com.lhd.runapp.presenter.WeekPresenter
 import dagger.hilt.android.AndroidEntryPoint
 
 class WeekFragment : Fragment() {
@@ -17,12 +22,18 @@ class WeekFragment : Fragment() {
     private lateinit var mBinding: FragmentWeekBinding
     private lateinit var barEntriesList: ArrayList<BarEntry>
     private val lsAxis: ArrayList<String> = ArrayList()
+    private lateinit var viewModel: WeekPresenter
+
+
+    @RequiresApi(Build.VERSION_CODES.O)
     override fun onCreateView(
         inflater: LayoutInflater, container: ViewGroup?,
         savedInstanceState: Bundle?
     ): View {
         // Inflate the layout for this fragment
         mBinding = FragmentWeekBinding.inflate(inflater, container, false)
+        viewModel = ViewModelProvider(this)[WeekPresenter::class.java]
+        viewModel.getStepsByWeek()
         return mBinding.root
     }
 
