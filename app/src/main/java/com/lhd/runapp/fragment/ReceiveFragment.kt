@@ -15,21 +15,20 @@ import com.lhd.runapp.adapter.ReceiveAdapter
 import com.lhd.runapp.databinding.DialogBinding
 import com.lhd.runapp.databinding.FragmentReceiveBinding
 import com.lhd.runapp.models.Receive
-import dagger.hilt.android.AndroidEntryPoint
 
 
 class ReceiveFragment : Fragment() {
 
 
-    private val lsReceive = ArrayList<Receive>()
     private var mBinding: FragmentReceiveBinding? = null
     private val binding get() = mBinding!!
-    private var myAdapter = ReceiveAdapter(arrayListOf(), 1)
+    private var myAdapterMonthChallenger = ReceiveAdapter(arrayListOf(), 1)
+    private var myAdapterAccumulatingSteps = ReceiveAdapter(arrayListOf(), 1)
 
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
-        addLsReceive()
+        addLsMonthChallenger()
     }
 
     override fun onCreateView(
@@ -39,24 +38,23 @@ class ReceiveFragment : Fragment() {
         mBinding = DataBindingUtil.inflate(
             inflater, R.layout.fragment_receive, container, false
         )
-        return binding.root
-    }
-
-    override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
-        super.onViewCreated(view, savedInstanceState)
         setUpRcv()
         showAlertDialog()
+        return binding.root
     }
 
     private fun setUpRcv() {
         binding.rcv.apply {
-            adapter = myAdapter
+            adapter = myAdapterMonthChallenger
             setHasFixedSize(true)
         }
+        myAdapterMonthChallenger.addData(addLsMonthChallenger())
+        //
         binding.rcv2.apply {
-            adapter = myAdapter
+            adapter = myAdapterAccumulatingSteps
             setHasFixedSize(true)
         }
+        myAdapterAccumulatingSteps.addData(addLsAccumulatingSteps())
     }
 
     private fun showAlertDialog() {
@@ -89,12 +87,13 @@ class ReceiveFragment : Fragment() {
 
     }
 
-    private fun addLsReceive() {
+    private fun addLsMonthChallenger(): ArrayList<Receive> {
+        val lsReceive = ArrayList<Receive>()
         lsReceive.add(
             Receive(
-                R.drawable.huy_chuong2,
-                "Spectacular Breakout",
-                "14/10/2022",
+                R.drawable.huy_huong1,
+                "Thu thach thang 1",
+                "14/1/2022",
                 "120",
                 "120"
             )
@@ -102,51 +101,198 @@ class ReceiveFragment : Fragment() {
         lsReceive.add(
             Receive(
                 R.drawable.huy_huong1,
-                "October Challenger",
-                "09/10/2022",
-                "12",
-                "120"
-            )
-        )
-        lsReceive.add(Receive(R.drawable.huy_chuong3, "Step to Mars ", "04/10/2022", "120", "120"))
-        lsReceive.add(
-            Receive(
-                R.drawable.huy_chuong4,
-                "August Challenger",
-                "14/08/2022",
-                "12",
-                "120"
-            )
-        )
-        lsReceive.add(
-            Receive(
-                R.drawable.huy_chuong2,
-                "Spectacular Breakout",
-                "14/10/2022",
-                "20",
-                "120"
-            )
-        )
-        lsReceive.add(
-            Receive(
-                R.drawable.huy_huong1,
-                "October Challenger",
-                "09/10/2022",
-                "120",
-                "120"
-            )
-        )
-        lsReceive.add(Receive(R.drawable.huy_chuong3, "Step to Mars ", "04/10/2022", "120", "120"))
-        lsReceive.add(
-            Receive(
-                R.drawable.huy_chuong4,
-                "August Challenger",
-                "14/08/2022",
-                "12",
+                "Thu thach thang 2",
+                "14/1/2022",
+                "10",
                 "120"
             )
         )
 
-        myAdapter.addData(lsReceive)
+        lsReceive.add(
+            Receive(
+                R.drawable.huy_huong1,
+                "Thu thach thang 3",
+                "14/1/2022",
+                "120",
+                "120"
+            )
+        )
+        lsReceive.add(
+            Receive(
+                R.drawable.huy_huong1,
+                "Thu thach thang 4",
+                "14/1/2022",
+                "120",
+                "120"
+            )
+        )
+
+        lsReceive.add(
+            Receive(
+                R.drawable.huy_huong1,
+                "Thu thach thang 5",
+                "14/1/2022",
+                "120",
+                "120"
+            )
+        )
+        lsReceive.add(
+            Receive(
+                R.drawable.huy_huong1,
+                "Thu thach thang 6",
+                "14/1/2022",
+                "120",
+                "120"
+            )
+        )
+
+        lsReceive.add(
+            Receive(
+                R.drawable.huy_huong1,
+                "Thu thach thang 7",
+                "14/1/2022",
+                "120",
+                "120"
+            )
+        )
+        lsReceive.add(
+            Receive(
+                R.drawable.huy_huong1,
+                "Thu thach thang 8",
+                "14/1/2022",
+                "120",
+                "120"
+            )
+        )
+
+        lsReceive.add(
+            Receive(
+                R.drawable.huy_huong1,
+                "Thu thach thang 9",
+                "14/1/2022",
+                "120",
+                "120"
+            )
+        )
+        lsReceive.add(
+            Receive(
+                R.drawable.huy_huong1,
+                "Thu thach thang 10",
+                "14/1/2022",
+                "120",
+                "120"
+            )
+        )
+
+        lsReceive.add(
+            Receive(
+                R.drawable.huy_huong1,
+                "Thu thach thang 11",
+                "14/1/2022",
+                "120",
+                "120"
+            )
+        )
+        lsReceive.add(
+            Receive(
+                R.drawable.huy_huong1,
+                "Thu thach thang 12",
+                "14/1/2022",
+                "120",
+                "120"
+            )
+        )
+
+        return lsReceive
+    }
+
+    private fun addLsAccumulatingSteps(): ArrayList<Receive> {
+        val lsAccumulatingSteps = ArrayList<Receive>()
+        lsAccumulatingSteps.add(
+            Receive(
+                R.drawable.huy_huong1,
+                "Khoi dau suon se",
+                "14/1/2022",
+                "20",
+                "120"
+            )
+        )
+        lsAccumulatingSteps.add(
+            Receive(
+                R.drawable.huy_huong1,
+                "Kien tri luyen tap",
+                "14/1/2022",
+                "10",
+                "120"
+            )
+        )
+
+        lsAccumulatingSteps.add(
+            Receive(
+                R.drawable.huy_huong1,
+                "Tich luy ben bi",
+                "14/1/2022",
+                "120",
+                "120"
+            )
+        )
+        lsAccumulatingSteps.add(
+            Receive(
+                R.drawable.huy_huong1,
+                "But pha ngoan muc",
+                "14/1/2022",
+                "20",
+                "120"
+            )
+        )
+
+        lsAccumulatingSteps.add(
+            Receive(
+                R.drawable.huy_huong1,
+                "Khong he lui buoc",
+                "14/1/2022",
+                "120",
+                "120"
+            )
+        )
+        lsAccumulatingSteps.add(
+            Receive(
+                R.drawable.huy_huong1,
+                "Dua con than gio",
+                "14/1/2022",
+                "120",
+                "120"
+            )
+        )
+
+        lsAccumulatingSteps.add(
+            Receive(
+                R.drawable.huy_huong1,
+                "Doi chan khong moi",
+                "14/1/2022",
+                "20",
+                "120"
+            )
+        )
+        lsAccumulatingSteps.add(
+            Receive(
+                R.drawable.huy_huong1,
+                "Buoc toi mat trang",
+                "14/1/2022",
+                "120",
+                "120"
+            )
+        )
+
+        lsAccumulatingSteps.add(
+            Receive(
+                R.drawable.huy_huong1,
+                "Buoc toi sao hoa",
+                "14/1/2022",
+                "10",
+                "120"
+            )
+        )
+        return lsAccumulatingSteps
     }
 }

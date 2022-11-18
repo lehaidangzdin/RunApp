@@ -1,16 +1,22 @@
 package com.lhd.runapp.utils
 
+import android.annotation.SuppressLint
 import android.content.Context
 import android.content.res.Resources
 import android.graphics.Bitmap
 import com.github.mikephil.charting.data.BarEntry
 import com.google.android.gms.auth.api.signin.GoogleSignIn
+import com.google.android.gms.fitness.Fitness
 import com.google.android.gms.fitness.FitnessOptions
 import com.google.android.gms.fitness.data.DataSet
 import com.google.android.gms.fitness.data.DataSource
 import com.google.android.gms.fitness.data.DataType
 import com.google.android.gms.fitness.request.DataReadRequest
+import com.lhd.runapp.models.RawData
+import kotlinx.coroutines.tasks.await
 import java.text.DecimalFormat
+import java.text.SimpleDateFormat
+import java.time.YearMonth
 import java.util.*
 import java.util.concurrent.TimeUnit
 import kotlin.math.floor
@@ -110,14 +116,42 @@ object Utils {
         return Date(cal.timeInMillis)
     }
 
+    fun getNumOfMonth(year: Int, month: Int): Int {
+        // lấy số ngày theo tháng
+        val yearMonthObject = YearMonth.of(year, month)
+        return yearMonthObject.lengthOfMonth()
+    }
 
-    fun getFirstMonday(year: Int, month: Int): Int {
-        val cacheCalendar = Calendar.getInstance()
-        cacheCalendar[Calendar.DAY_OF_WEEK] = Calendar.MONDAY
-        cacheCalendar[Calendar.DAY_OF_WEEK_IN_MONTH] = 1
-        cacheCalendar[Calendar.MONTH] = month
-        cacheCalendar[Calendar.YEAR] = year
-        return cacheCalendar[Calendar.DATE]
+    @SuppressLint("SimpleDateFormat")
+    fun convertTimeRequestToShort(startTime: Long, endTime: Long): String {
+        val sdf = SimpleDateFormat("dd/MM/yyyy")
+        val start = sdf.format(startTime).toString().substring(0, 5)
+        val end = sdf.format(endTime).toString().substring(0, 5)
+//        return "${start}-${end}"
+        return end
+    }
+
+    @SuppressLint("SimpleDateFormat")
+    suspend fun getData(
+        context: Context,
+        startTime: Long,
+        endTime: Long
+    ): ArrayList<RawData> {
+        val lsRawData = ArrayList<RawData>()
+        val task = Fitness.getHistoryClient(context.applicationContext, getAccount(context))
+            .readData(getReadRequestData(startTime, endTime))
+        val response = task.await()
+        for (bucket in response.buckets) {
+            val stepsDate = bucket.getStartTime(TimeUnit.MILLISECONDS)
+            var totalDay = 0f
+            for (dataSet in bucket.dataSets) {
+                // step trong 1 ngay
+                totalDay +=
+                    dumpDataSet(dataSet)
+            }
+            lsRawData.add(RawData(stepsDate, totalDay))
+        }
+        return lsRawData
     }
 
 

@@ -11,21 +11,21 @@
         android:id="@+id/main_activity_view"
         android:layout_width="match_parent"
         android:layout_height="match_parent"
-        android:background="@color/black"
         android:orientation="vertical"
         android:padding="@dimen/dimen_8"
         tools:context=".MainActivity2">
 
-        <TextView
-            android:id="@+id/txtSteps"
+        <com.github.mikephil.charting.charts.BarChart
+            android:id="@+id/barChart"
             android:layout_width="match_parent"
-            android:layout_height="wrap_content" />
-
-        <Button
-            android:id="@+id/btnUnSteps"
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:text="un steps" />
+            android:layout_height="@dimen/dimen_400"
+            android:layout_centerInParent="true"
+            android:layout_marginStart="@dimen/dimen_4"
+            android:layout_marginTop="@dimen/dimen_4"
+            android:layout_marginEnd="@dimen/dimen_4"
+            android:layout_marginBottom="@dimen/dimen_4"
+            android:background="#000"
+            android:paddingBottom="@dimen/dimen_8" />
 
 
     </LinearLayout>

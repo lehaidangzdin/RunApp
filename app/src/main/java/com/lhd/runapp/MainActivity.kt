@@ -5,7 +5,6 @@ import android.content.Intent
 import android.content.pm.PackageManager
 import android.os.Build
 import android.os.Bundle
-import android.widget.Toast
 import androidx.activity.result.ActivityResultLauncher
 import androidx.activity.result.contract.ActivityResultContracts
 import androidx.annotation.RequiresApi
@@ -19,7 +18,7 @@ import com.lhd.runapp.fragment.EventFragment
 import com.lhd.runapp.fragment.HomeFragment
 import com.lhd.runapp.fragment.ReceiveFragment
 import com.lhd.runapp.interfacePresenter.HomeInterface
-import com.lhd.runapp.presenter.HomePresenter
+import com.lhd.runapp.viewmodel.HomePresenter
 import com.lhd.runapp.utils.FitRequestCode
 
 class MainActivity : AppCompatActivity(), HomeInterface {

@@ -41,11 +41,10 @@ class SetupChart(
             setDrawValues(false)
             valueTextSize = 14f
             gradientColors = lsGradientColors
-
         }
         // width column
         dataChart = BarData(dataSet).apply {
-            barWidth = 0.6f
+//            barWidth = 0.7f
         }
         // radius column
         val myBarChartRender = MyBarChartRender(
@@ -63,9 +62,10 @@ class SetupChart(
             marker = mv
             isDoubleTapToZoomEnabled = false
             animateY(3000, Easing.EaseOutBack)
-            isSelected = true
             extraBottomOffset = 10f
+            extraLeftOffset = 2f
 //            renderer = myBarChartRender
+            setNoDataText("Loading...")
             setTouchEnabled(true)
             setScaleEnabled(false)
             setVisibleXRangeMaximum(7F)
@@ -99,7 +99,7 @@ class SetupChart(
             setDrawGridLines(false)
 
         }
-        // hien thi cot cuoi cung
+        // tu hien thi cot cuoi cung
         barChart.moveViewToX(dataChart.entryCount.toFloat())
     }
 }

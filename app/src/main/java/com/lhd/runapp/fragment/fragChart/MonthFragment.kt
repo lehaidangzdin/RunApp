@@ -2,7 +2,6 @@ package com.lhd.runapp.fragment.fragChart
 
 import android.os.Build
 import android.os.Bundle
-import android.util.Log
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
@@ -12,13 +11,13 @@ import androidx.lifecycle.ViewModelProvider
 import com.github.mikephil.charting.data.BarEntry
 import com.lhd.runapp.customviews.SetupChart
 import com.lhd.runapp.databinding.FragmentMonthBinding
-import com.lhd.runapp.presenter.MonthPresenter
+import com.lhd.runapp.viewmodel.HomePresenter
 import kotlin.collections.ArrayList
 
 class MonthFragment : Fragment() {
 
     private lateinit var mBinding: FragmentMonthBinding
-    private lateinit var viewModel: MonthPresenter
+    private lateinit var viewModel: HomePresenter
 
     @RequiresApi(Build.VERSION_CODES.O)
     override fun onCreateView(
@@ -27,15 +26,17 @@ class MonthFragment : Fragment() {
     ): View {
         // Inflate the layout for this fragment
         mBinding = FragmentMonthBinding.inflate(inflater, container, false)
-        viewModel = ViewModelProvider(this)[MonthPresenter::class.java]
+        viewModel = ViewModelProvider(this)[HomePresenter::class.java]
         viewModel.getStepsByMonth()
         observerComponent()
         return mBinding.root
     }
 
     private fun observerComponent() {
-        viewModel.dataChar.observe(viewLifecycleOwner) {
-            displayChart(it.lsAxis, it.lsBarEntry)
+        viewModel.dataChartByMonth.observe(viewLifecycleOwner) {
+            if (it.lsBarEntry.size == 12) {
+                displayChart(it.lsAxis, it.lsBarEntry)
+            }
         }
     }
 
@@ -43,11 +44,7 @@ class MonthFragment : Fragment() {
         lsAxis: ArrayList<String>,
         lsBarEntries: ArrayList<BarEntry>
     ) {
-//        for (i in lsAxis) {
-//            Log.e(TAG, "displayChart: data $i")
-//        }
-
-        SetupChart(context, mBinding.barChart, lsBarEntries, lsAxis, 12000f)
+        SetupChart(context, mBinding.barChart, lsBarEntries, lsAxis, 120000f)
             .applyOptions()
     }
 

@@ -21,6 +21,7 @@ class MyBarChartRender(
     BarChartRenderer(chart, animator, viewPortHandler) {
     private val mBarShadowRectBuffer = RectF()
     private var mRadius = 0
+
     fun setRadius(mRadius: Int) {
         this.mRadius = mRadius
     }

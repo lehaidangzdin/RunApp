@@ -16,5 +16,7 @@
     <string name="view_all"><u>View all</u></string>
     <string name="month_challenge">Month Challenge</string>
     <string name="_3_12_titles">3/12 Titles</string>
+    <!--    -->
+    <string name="loading">Loading...</string>
 
 </resources>

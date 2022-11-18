@@ -10,7 +10,6 @@ import androidx.annotation.RequiresApi
 import androidx.fragment.app.Fragment
 import androidx.fragment.app.FragmentTransaction
 import androidx.lifecycle.ViewModelProvider
-import com.google.android.gms.auth.api.signin.GoogleSignIn
 import com.google.android.material.tabs.TabLayout
 import com.lhd.runapp.R
 import com.lhd.runapp.adapter.ReceiveAdapter
@@ -22,13 +21,11 @@ import com.lhd.runapp.fragment.fragChart.MonthFragment
 import com.lhd.runapp.fragment.fragChart.WeekFragment
 import com.lhd.runapp.interfacePresenter.HomeInterface
 import com.lhd.runapp.models.Receive
-import com.lhd.runapp.presenter.HomePresenter
-import com.lhd.runapp.utils.Utils.fitnessOptions
-import com.lhd.runapp.utils.Utils.getAccount
+import com.lhd.runapp.viewmodel.HomePresenter
 import kotlin.collections.ArrayList
 
 
-const val TAG = "abc"
+const val TAG = "HomeFragment"
 
 class HomeFragment(private val goToReceive: HomeInterface) : Fragment() {
 
@@ -36,8 +33,6 @@ class HomeFragment(private val goToReceive: HomeInterface) : Fragment() {
     private var myAdapter = ReceiveAdapter(arrayListOf(), 0)
     private var lsIconReceive = ArrayList<ReceiveSeekbar>()
     private lateinit var viewModel: HomePresenter
-
-    //
     private var fragment: Fragment? = null
 
     @RequiresApi(Build.VERSION_CODES.O)
@@ -46,26 +41,21 @@ class HomeFragment(private val goToReceive: HomeInterface) : Fragment() {
         savedInstanceState: Bundle?
     ): View {
         mBinding = FragmentHomeBinding.inflate(inflater, container, false)
-        // viewModel
-//        val factory = HomeFactory(requireActivity().application, this)
         viewModel = ViewModelProvider(this)[HomePresenter::class.java]
-        mBinding.homePresenter = viewModel
         viewModel.checkPermission(requireActivity())
+        mBinding.homePresenter = viewModel
         //
         observerComponent()
         setUpUI()
         setupMySeekBar()
         setUpRcv()
-        Log.e(
-            TAG,
-            "onCreateView: ${GoogleSignIn.hasPermissions(getAccount(requireContext()), fitnessOptions)}",
-        )
         return mBinding.root
     }
 
     private fun observerComponent() {
         viewModel.process.observe(viewLifecycleOwner) {
             mBinding.mySeekBar.progress = it / 4500f
+            Log.e(TAG, "observerComponent: $it")
         }
     }
 
@@ -226,7 +216,7 @@ class HomeFragment(private val goToReceive: HomeInterface) : Fragment() {
         ft.commit()
     }
 
-    fun setUpUI() {
+    private fun setUpUI() {
         setupTabLayout()
         replaceFragment(DayFragment())
     }

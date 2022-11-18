@@ -7,7 +7,7 @@
 
         <variable
             name="homePresenter"
-            type="com.lhd.runapp.presenter.HomePresenter" />
+            type="com.lhd.runapp.viewmodel.HomePresenter" />
     </data>
 
     <androidx.core.widget.NestedScrollView
