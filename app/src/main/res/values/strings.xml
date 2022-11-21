@@ -2,9 +2,7 @@
     <string name="app_name">RunApp</string>
     <string name="home">Home</string>
     <string name="event">Event</string>
-    <!-- TODO: Remove or change this placeholder text -->
-    <string name="hello_blank_fragment">Hello blank fragment</string>
-    <!--    <string name="steps"><b>TODAY: 524/4000 steps</b></string>-->
+
     <string name="today">TODAY: </string>
     <string name="_4_000_steps"> /4.000 steps</string>
     <string name="_500"> 0</string>
@@ -15,6 +13,7 @@
     <string name="recent_achieved_badge">RECENT ACHIEVED BADGE</string>
     <string name="view_all"><u>View all</u></string>
     <string name="month_challenge">Month Challenge</string>
+    <string name="accumulate_challenge">Accumulate Steps</string>
     <string name="_3_12_titles">3/12 Titles</string>
     <!--    -->
     <string name="loading">Loading...</string>

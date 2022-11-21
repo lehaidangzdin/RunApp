@@ -9,6 +9,7 @@ import android.view.ViewGroup
 import androidx.annotation.RequiresApi
 import androidx.fragment.app.Fragment
 import androidx.fragment.app.FragmentTransaction
+import androidx.fragment.app.activityViewModels
 import androidx.lifecycle.ViewModelProvider
 import com.google.android.material.tabs.TabLayout
 import com.lhd.runapp.R
@@ -20,8 +21,8 @@ import com.lhd.runapp.fragment.fragChart.DayFragment
 import com.lhd.runapp.fragment.fragChart.MonthFragment
 import com.lhd.runapp.fragment.fragChart.WeekFragment
 import com.lhd.runapp.interfacePresenter.HomeInterface
-import com.lhd.runapp.models.Receive
-import com.lhd.runapp.viewmodel.HomePresenter
+import com.lhd.runapp.models.Challenger
+import com.lhd.runapp.viewmodel.HomeViewModel
 import kotlin.collections.ArrayList
 
 
@@ -32,7 +33,7 @@ class HomeFragment(private val goToReceive: HomeInterface) : Fragment() {
     private lateinit var mBinding: FragmentHomeBinding
     private var myAdapter = ReceiveAdapter(arrayListOf(), 0)
     private var lsIconReceive = ArrayList<ReceiveSeekbar>()
-    private lateinit var viewModel: HomePresenter
+    private lateinit var viewModel: HomeViewModel
     private var fragment: Fragment? = null
 
     @RequiresApi(Build.VERSION_CODES.O)
@@ -41,7 +42,7 @@ class HomeFragment(private val goToReceive: HomeInterface) : Fragment() {
         savedInstanceState: Bundle?
     ): View {
         mBinding = FragmentHomeBinding.inflate(inflater, container, false)
-        viewModel = ViewModelProvider(this)[HomePresenter::class.java]
+        viewModel = ViewModelProvider(requireActivity())[HomeViewModel::class.java]
         viewModel.checkPermission(requireActivity())
         mBinding.homePresenter = viewModel
         //
@@ -55,7 +56,7 @@ class HomeFragment(private val goToReceive: HomeInterface) : Fragment() {
     private fun observerComponent() {
         viewModel.process.observe(viewLifecycleOwner) {
             mBinding.mySeekBar.progress = it / 4500f
-            Log.e(TAG, "observerComponent: $it")
+            mBinding.numSteps.text = it.toString()
         }
     }
 
@@ -122,12 +123,12 @@ class HomeFragment(private val goToReceive: HomeInterface) : Fragment() {
         lsIconReceive.add(ReceiveSeekbar(R.drawable.reiceve3, false))
     }
 
-    private fun addLsReceive(): ArrayList<Receive> {
+    private fun addLsReceive(): ArrayList<Challenger> {
 
-        val lsAchieved = ArrayList<Receive>()
+        val lsAchieved = ArrayList<Challenger>()
 
         lsAchieved.add(
-            Receive(
+            Challenger(
                 R.drawable.huy_chuong2,
                 "Spectacular Breakout",
                 "14/10/2022",
@@ -136,7 +137,7 @@ class HomeFragment(private val goToReceive: HomeInterface) : Fragment() {
             )
         )
         lsAchieved.add(
-            Receive(
+            Challenger(
                 R.drawable.huy_huong1,
                 "October Challenger",
                 "09/10/2022",
@@ -144,9 +145,17 @@ class HomeFragment(private val goToReceive: HomeInterface) : Fragment() {
                 "120"
             )
         )
-        lsAchieved.add(Receive(R.drawable.huy_chuong3, "Step to Mars ", "04/10/2022", "120", "120"))
         lsAchieved.add(
-            Receive(
+            Challenger(
+                R.drawable.huy_chuong3,
+                "Step to Mars ",
+                "04/10/2022",
+                "120",
+                "120"
+            )
+        )
+        lsAchieved.add(
+            Challenger(
                 R.drawable.huy_chuong4,
                 "August Challenger",
                 "14/08/2022",
@@ -155,7 +164,7 @@ class HomeFragment(private val goToReceive: HomeInterface) : Fragment() {
             )
         )
         lsAchieved.add(
-            Receive(
+            Challenger(
                 R.drawable.huy_chuong2,
                 "Spectacular Breakout",
                 "14/10/2022",
@@ -164,7 +173,7 @@ class HomeFragment(private val goToReceive: HomeInterface) : Fragment() {
             )
         )
         lsAchieved.add(
-            Receive(
+            Challenger(
                 R.drawable.huy_huong1,
                 "October Challenger",
                 "09/10/2022",
@@ -172,9 +181,17 @@ class HomeFragment(private val goToReceive: HomeInterface) : Fragment() {
                 "120"
             )
         )
-        lsAchieved.add(Receive(R.drawable.huy_chuong3, "Step to Mars ", "04/10/2022", "120", "120"))
         lsAchieved.add(
-            Receive(
+            Challenger(
+                R.drawable.huy_chuong3,
+                "Step to Mars ",
+                "04/10/2022",
+                "120",
+                "120"
+            )
+        )
+        lsAchieved.add(
+            Challenger(
                 R.drawable.huy_chuong4,
                 "August Challenger",
                 "14/08/2022",

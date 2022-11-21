@@ -2,6 +2,7 @@ package com.lhd.runapp.fragment.fragChart
 
 import android.os.Build
 import android.os.Bundle
+import android.util.Log
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
@@ -11,12 +12,13 @@ import androidx.lifecycle.ViewModelProvider
 import com.github.mikephil.charting.data.BarEntry
 import com.lhd.runapp.customviews.SetupChart
 import com.lhd.runapp.databinding.FragmentWeekBinding
-import com.lhd.runapp.viewmodel.HomePresenter
+import com.lhd.runapp.utils.Utils
+import com.lhd.runapp.viewmodel.HomeViewModel
 
 class WeekFragment : Fragment() {
 
     private lateinit var mBinding: FragmentWeekBinding
-    private lateinit var viewModel: HomePresenter
+    private lateinit var viewModel: HomeViewModel
 
     @RequiresApi(Build.VERSION_CODES.O)
     override fun onCreateView(
@@ -25,7 +27,7 @@ class WeekFragment : Fragment() {
     ): View {
         // Inflate the layout for this fragment
         mBinding = FragmentWeekBinding.inflate(inflater, container, false)
-        viewModel = ViewModelProvider(this)[HomePresenter::class.java]
+        viewModel = ViewModelProvider(requireActivity())[HomeViewModel::class.java]
         viewModel.getStepsByWeekOfMonth()
         observerComponent()
 
@@ -33,16 +35,40 @@ class WeekFragment : Fragment() {
     }
 
     private fun observerComponent() {
-        viewModel.dataChartByWeekOfMonth.observe(viewLifecycleOwner) {
-            displayChart(it.lsAxis, it.lsBarEntry)
-        }
+//        viewModel.dataChartByWeekOfMonth.observe(viewLifecycleOwner) {
+//            if (it.lsBarEntry.size == 5) {
+//                displayChart(it.lsAxis, it.lsBarEntry)
+        displayChart(addLsAxis(), addLsBarEntry())
+//            }
+//        }
+    }
+
+    fun addLsAxis(): ArrayList<String> {
+        val ls = ArrayList<String>()
+        ls.add("07/11")
+        ls.add("14/11")
+        ls.add("21/11")
+        ls.add("28/11")
+        ls.add("29/11")
+
+        return ls
+    }
+
+    fun addLsBarEntry(): ArrayList<BarEntry> {
+        val ls = ArrayList<BarEntry>()
+        ls.add(BarEntry(0f, 0f))
+        ls.add(BarEntry(1f, 10000f))
+        ls.add(BarEntry(2f, 20000f))
+        ls.add(BarEntry(3f, 30000f))
+        ls.add(BarEntry(4f, 40000f))
+        return ls
     }
 
     private fun displayChart(
         lsAxis: ArrayList<String>,
         lsBarEntries: ArrayList<BarEntry>
     ) {
-        SetupChart(context, mBinding.barChart, lsBarEntries, lsAxis, 28000f)
+        SetupChart(context, mBinding.barChart, lsBarEntries, lsAxis, Utils.MAX_WEEK.toFloat())
             .applyOptions()
     }
 }

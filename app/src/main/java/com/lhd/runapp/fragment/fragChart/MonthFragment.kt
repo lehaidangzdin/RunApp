@@ -11,13 +11,14 @@ import androidx.lifecycle.ViewModelProvider
 import com.github.mikephil.charting.data.BarEntry
 import com.lhd.runapp.customviews.SetupChart
 import com.lhd.runapp.databinding.FragmentMonthBinding
-import com.lhd.runapp.viewmodel.HomePresenter
+import com.lhd.runapp.utils.Utils
+import com.lhd.runapp.viewmodel.HomeViewModel
 import kotlin.collections.ArrayList
 
 class MonthFragment : Fragment() {
 
     private lateinit var mBinding: FragmentMonthBinding
-    private lateinit var viewModel: HomePresenter
+    private lateinit var viewModel: HomeViewModel
 
     @RequiresApi(Build.VERSION_CODES.O)
     override fun onCreateView(
@@ -26,7 +27,7 @@ class MonthFragment : Fragment() {
     ): View {
         // Inflate the layout for this fragment
         mBinding = FragmentMonthBinding.inflate(inflater, container, false)
-        viewModel = ViewModelProvider(this)[HomePresenter::class.java]
+        viewModel = ViewModelProvider(requireActivity())[HomeViewModel::class.java]
         viewModel.getStepsByMonth()
         observerComponent()
         return mBinding.root
@@ -34,9 +35,7 @@ class MonthFragment : Fragment() {
 
     private fun observerComponent() {
         viewModel.dataChartByMonth.observe(viewLifecycleOwner) {
-            if (it.lsBarEntry.size == 12) {
-                displayChart(it.lsAxis, it.lsBarEntry)
-            }
+            displayChart(it.lsAxis, it.lsBarEntry)
         }
     }
 
@@ -44,7 +43,7 @@ class MonthFragment : Fragment() {
         lsAxis: ArrayList<String>,
         lsBarEntries: ArrayList<BarEntry>
     ) {
-        SetupChart(context, mBinding.barChart, lsBarEntries, lsAxis, 120000f)
+        SetupChart(context, mBinding.barChart, lsBarEntries, lsAxis, Utils.MAX_MONTH.toFloat())
             .applyOptions()
     }
 

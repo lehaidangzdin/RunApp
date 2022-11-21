@@ -68,6 +68,11 @@ dependencies {
     implementation "androidx.activity:activity:1.6.1"
     implementation "androidx.fragment:fragment:1.5.4"
 
+    implementation "androidx.lifecycle:lifecycle-livedata-ktx:2.5.1"
+    implementation "androidx.lifecycle:lifecycle-viewmodel-ktx:2.5.1"
+    implementation "androidx.lifecycle:lifecycle-viewmodel-savedstate:2.5.1"
+    implementation "androidx.navigation:navigation-fragment-ktx:2.5.3"
+
     // the google play services client library
     implementation 'com.google.android.gms:play-services-fitness:21.1.0'
     implementation 'com.google.android.gms:play-services-auth:20.3.0'
@@ -76,8 +81,6 @@ dependencies {
     implementation 'org.jetbrains.kotlinx:kotlinx-coroutines-android:1.6.1'
     implementation 'org.jetbrains.kotlinx:kotlinx-coroutines-play-services:1.4.1'
 
-    //
-    implementation 'androidx.lifecycle:lifecycle-viewmodel-ktx:2.5.1'
     //
     implementation "com.google.dagger:hilt-android:2.44"
     kapt "com.google.dagger:hilt-compiler:2.44"

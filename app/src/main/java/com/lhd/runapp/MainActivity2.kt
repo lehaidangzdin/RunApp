@@ -39,8 +39,8 @@ const val TAG = "BasicSensorsApi"
 
 class MainActivity2 : AppCompatActivity() {
 
-    val lsAxis = ArrayList<String>()
-    val lsBarEntry = ArrayList<BarEntry>()
+    private val lsAxis = ArrayList<String>()
+    private val lsBarEntry = ArrayList<BarEntry>()
 
     @RequiresApi(Build.VERSION_CODES.Q)
     override fun onCreate(savedInstanceState: Bundle?) {
@@ -85,19 +85,19 @@ class MainActivity2 : AppCompatActivity() {
 
     private fun addDataChar() {
         lsAxis.add("0")
-        lsAxis.add("1")
-        lsAxis.add("2")
-        lsAxis.add("3")
-        lsAxis.add("4")
-        lsAxis.add("5")
-        lsAxis.add("6")
+        lsAxis.add("1-223")
+        lsAxis.add("2-123")
+        lsAxis.add("3-34")
+        lsAxis.add("4-434")
+        lsAxis.add("5-34")
+//        lsAxis.add("6")
         //
         lsBarEntry.add(BarEntry(1f, 1f))
         lsBarEntry.add(BarEntry(2f, 2f))
         lsBarEntry.add(BarEntry(3f, 3f))
-        lsBarEntry.add(BarEntry(4f, 4f))
-        lsBarEntry.add(BarEntry(5f, 4f))
-        lsBarEntry.add(BarEntry(6f, 2f))
+        lsBarEntry.add(BarEntry(4f, 0f))
+        lsBarEntry.add(BarEntry(5f, 0f))
+//        lsBarEntry.add(BarEntry(6f, 0f))
     }
 
 }

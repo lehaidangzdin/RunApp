@@ -7,10 +7,10 @@ import androidx.recyclerview.widget.RecyclerView
 import com.google.android.flexbox.AlignItems
 import com.google.android.flexbox.FlexboxLayoutManager
 import com.lhd.runapp.databinding.ItemReceiveBinding
-import com.lhd.runapp.models.Receive
+import com.lhd.runapp.models.Challenger
 
 class ReceiveAdapter(
-    private val lsReceive: ArrayList<Receive>,
+    private val lsChallenger: ArrayList<Challenger>,
     private val type: Int
 ) : RecyclerView.Adapter<ReceiveAdapter.MyViewHolder>() {
 
@@ -18,9 +18,9 @@ class ReceiveAdapter(
     private val limit = 4
 
     @SuppressLint("NotifyDataSetChanged")
-    fun addData(list: List<Receive>) {
-        lsReceive.clear()
-        lsReceive.addAll(list)
+    fun addData(list: List<Challenger>) {
+        lsChallenger.clear()
+        lsChallenger.addAll(list)
         notifyDataSetChanged()
     }
 
@@ -41,7 +41,7 @@ class ReceiveAdapter(
     }
 
     override fun onBindViewHolder(holder: MyViewHolder, position: Int) {
-        val currentMovie = lsReceive[position]
+        val currentMovie = lsChallenger[position]
         holder.mBinding.item = currentMovie
         val lp = holder.mBinding.itemReceive.layoutParams
         if (lp is FlexboxLayoutManager.LayoutParams) {
@@ -52,12 +52,12 @@ class ReceiveAdapter(
 
     override fun getItemCount(): Int {
 
-        if (type == 0 && lsReceive.size > limit) return limit
+        if (type == 0 && lsChallenger.size > limit) return limit
 
-        return lsReceive.size
+        return lsChallenger.size
     }
 
     interface OnClickItem {
-        fun clickItem(results: Receive);
+        fun clickItem(results: Challenger);
     }
 }

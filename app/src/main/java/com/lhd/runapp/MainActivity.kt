@@ -5,6 +5,7 @@ import android.content.Intent
 import android.content.pm.PackageManager
 import android.os.Build
 import android.os.Bundle
+import android.widget.Toast
 import androidx.activity.result.ActivityResultLauncher
 import androidx.activity.result.contract.ActivityResultContracts
 import androidx.annotation.RequiresApi
@@ -18,7 +19,7 @@ import com.lhd.runapp.fragment.EventFragment
 import com.lhd.runapp.fragment.HomeFragment
 import com.lhd.runapp.fragment.ReceiveFragment
 import com.lhd.runapp.interfacePresenter.HomeInterface
-import com.lhd.runapp.viewmodel.HomePresenter
+import com.lhd.runapp.viewmodel.HomeViewModel
 import com.lhd.runapp.utils.FitRequestCode
 
 class MainActivity : AppCompatActivity(), HomeInterface {
@@ -27,17 +28,13 @@ class MainActivity : AppCompatActivity(), HomeInterface {
 
     private var isPermissionRecognitionGranted = false
     private var isPermissionLocation = false
-
-    private lateinit var viewModel: HomePresenter
+    private lateinit var viewModel: HomeViewModel
 
     @RequiresApi(Build.VERSION_CODES.Q)
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         mBinding = DataBindingUtil.setContentView(this, R.layout.activity_main)
-
-        viewModel = ViewModelProvider(this)[HomePresenter::class.java]
-        //
-
+        viewModel = ViewModelProvider(this)[HomeViewModel::class.java]
         permissionLauncher =
             registerForActivityResult(ActivityResultContracts.RequestMultiplePermissions()) {
                 isPermissionRecognitionGranted =
@@ -104,7 +101,10 @@ class MainActivity : AppCompatActivity(), HomeInterface {
         super.onActivityResult(requestCode, resultCode, data)
         if (requestCode == FitRequestCode.GG_FIT_REQUEST_CODE.ordinal) {
 //            Toast.makeText(this, "GG sign in request code $requestCode", Toast.LENGTH_SHORT).show()
-            reFragment(HomeFragment(this))
+//            reFragment(HomeFragment(this))
+            viewModel.setIsSignIn(true)
+            viewModel.getStepDaily()
+            viewModel.subscribe()
         }
 
     }

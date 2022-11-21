@@ -7,11 +7,14 @@ import android.view.View
 import android.view.ViewGroup
 import androidx.annotation.RequiresApi
 import androidx.fragment.app.Fragment
+import androidx.fragment.app.activityViewModels
 import androidx.lifecycle.ViewModelProvider
 import com.github.mikephil.charting.data.BarEntry
+import com.google.android.gms.auth.api.signin.GoogleSignIn
 import com.lhd.runapp.customviews.SetupChart
 import com.lhd.runapp.databinding.FragmentDayBinding
-import com.lhd.runapp.viewmodel.HomePresenter
+import com.lhd.runapp.utils.Utils
+import com.lhd.runapp.viewmodel.HomeViewModel
 import java.util.*
 
 const val TAG = "DayFragment"
@@ -19,8 +22,7 @@ const val TAG = "DayFragment"
 class DayFragment : Fragment() {
 
     private lateinit var mBinding: FragmentDayBinding
-    private var xFloat = 0f
-    private lateinit var viewModel: HomePresenter
+    private lateinit var viewModel: HomeViewModel
 
     @RequiresApi(Build.VERSION_CODES.O)
     override fun onCreate(savedInstanceState: Bundle?) {
@@ -33,22 +35,26 @@ class DayFragment : Fragment() {
         savedInstanceState: Bundle?
     ): View {
         mBinding = FragmentDayBinding.inflate(inflater, container, false)
-        viewModel = ViewModelProvider(this)[HomePresenter::class.java]
-        viewModel.getStepsByDayOfWeek()
+        viewModel =
+            ViewModelProvider(requireActivity())[HomeViewModel::class.java]
         observerChart()
         return mBinding.root
     }
 
+    @RequiresApi(Build.VERSION_CODES.O)
     private fun observerChart() {
         viewModel.dataChartByWeek.observe(viewLifecycleOwner) {
-//            if (it.lsBarEntry.size == 7) {
-                displayChart(it.lsAxis, it.lsBarEntry)
-//            }
+            displayChart(it.lsAxis, it.lsBarEntry)
+        }
+        viewModel.isSignIn.observe(viewLifecycleOwner) {
+            if (it) {
+                viewModel.getStepsByDayOfWeek()
+            }
         }
     }
 
     private fun displayChart(lsAxis: ArrayList<String>, lsBarEntries: ArrayList<BarEntry>) {
-        SetupChart(context, mBinding.barChart, lsBarEntries, lsAxis, 4000f)
+        SetupChart(context, mBinding.barChart, lsBarEntries, lsAxis, Utils.MAX_DAY.toFloat())
             .applyOptions()
     }
 

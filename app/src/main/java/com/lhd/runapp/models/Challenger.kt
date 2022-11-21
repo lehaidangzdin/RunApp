@@ -1,6 +1,6 @@
 package com.lhd.runapp.models
 
-data class Receive(
+data class Challenger(
     val img: Int,
     val name: String,
     val date: String,
