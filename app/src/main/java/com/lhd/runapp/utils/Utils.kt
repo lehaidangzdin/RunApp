@@ -14,6 +14,7 @@ import com.google.android.gms.fitness.data.DataSource
 import com.google.android.gms.fitness.data.DataType
 import com.google.android.gms.fitness.data.Field
 import com.google.android.gms.fitness.request.DataReadRequest
+import com.lhd.runapp.models.Challenger
 import com.lhd.runapp.models.RawData
 import com.lhd.runapp.viewmodel.TAG
 import kotlinx.coroutines.tasks.await
@@ -40,6 +41,8 @@ object Utils {
         "Never Back Down", "Children of Sylph", "Feet Are Not Tired", "Step to the Moon",
         "Step to Marks"
     )
+
+    val accumulateStepsChallenger = ArrayList<Challenger>()
 
     fun dumpDataSet(dataSet: DataSet): Float {
         var totalSteps = 0f

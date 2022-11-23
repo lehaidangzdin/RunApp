@@ -100,8 +100,6 @@ class MainActivity : AppCompatActivity(), HomeInterface {
     override fun onActivityResult(requestCode: Int, resultCode: Int, data: Intent?) {
         super.onActivityResult(requestCode, resultCode, data)
         if (requestCode == FitRequestCode.GG_FIT_REQUEST_CODE.ordinal) {
-//            Toast.makeText(this, "GG sign in request code $requestCode", Toast.LENGTH_SHORT).show()
-//            reFragment(HomeFragment(this))
             viewModel.setIsSignIn(true)
             viewModel.getStepDaily()
             viewModel.subscribe()

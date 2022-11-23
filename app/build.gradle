@@ -6,14 +6,6 @@ plugins {
 }
 
 android {
-    signingConfigs {
-        debug {
-            storeFile file('D:\\LE HAI DANG\\Code\\key.jks')
-            keyAlias 'keyRunApp'
-            keyPassword '123456'
-            storePassword '123456'
-        }
-    }
     compileSdk 33
 
     defaultConfig {
@@ -84,6 +76,8 @@ dependencies {
     //
     implementation "com.google.dagger:hilt-android:2.44"
     kapt "com.google.dagger:hilt-compiler:2.44"
+    // leakcanry
+    debugImplementation 'com.squareup.leakcanary:leakcanary-android:2.10'
 
 
 }

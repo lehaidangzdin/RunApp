@@ -5,6 +5,9 @@
 
     <data>
 
+        <variable
+            name="model"
+            type="com.lhd.runapp.viewmodel.HomeViewModel" />
     </data>
 
     <androidx.core.widget.NestedScrollView
@@ -30,13 +33,13 @@
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
                     android:layout_alignParentStart="true"
-                    android:layout_marginStart="@dimen/dimen_4"
+                    android:layout_marginStart="@dimen/dimen_6"
                     android:layout_marginTop="@dimen/dimen_4"
                     android:layout_marginEnd="@dimen/dimen_4"
                     android:layout_marginBottom="@dimen/dimen_4"
                     android:text="@string/month_challenge"
                     android:textColor="@color/red"
-                    android:textSize="18sp"
+                    android:textSize="20sp"
                     android:textStyle="bold" />
 
 
@@ -48,7 +51,7 @@
                     android:layout_marginTop="@dimen/dimen_4"
                     android:layout_marginEnd="@dimen/dimen_4"
                     android:layout_marginBottom="@dimen/dimen_4"
-                    android:text="@string/_3_12_titles"
+                    android:countTitlesMonthChallenger="@{model.countTitles}"
                     android:textColor="@color/red"
                     android:textSize="18sp"
                     android:textStyle="bold" />
@@ -58,6 +61,7 @@
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
                     android:layout_below="@+id/tvChallenge"
+                    android:layout_centerInParent="true"
                     android:layout_marginStart="@dimen/dimen_4"
                     android:layout_marginTop="@dimen/dimen_4"
                     android:layout_marginEnd="@dimen/dimen_4"
@@ -68,7 +72,7 @@
             </RelativeLayout>
 
             <RelativeLayout
-                android:layout_width="match_parent"
+                android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:layout_margin="@dimen/dimen_8"
                 android:background="@drawable/bg_block_info"
@@ -79,22 +83,24 @@
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
                     android:layout_alignParentStart="true"
-                    android:layout_marginStart="@dimen/dimen_4"
+                    android:layout_marginStart="@dimen/dimen_6"
                     android:layout_marginTop="@dimen/dimen_4"
                     android:layout_marginEnd="@dimen/dimen_4"
                     android:layout_marginBottom="@dimen/dimen_4"
                     android:text="@string/accumulate_challenge"
                     android:textColor="@color/red"
-                    android:textSize="18sp"
+                    android:textSize="20sp"
                     android:textStyle="bold" />
-
 
                 <TextView
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
                     android:layout_alignParentEnd="true"
-                    android:layout_margin="@dimen/dimen_4"
-                    android:text="@string/_3_12_titles"
+                    android:layout_marginStart="@dimen/dimen_4"
+                    android:layout_marginTop="@dimen/dimen_4"
+                    android:layout_marginEnd="@dimen/dimen_4"
+                    android:layout_marginBottom="@dimen/dimen_4"
+                    android:countTitlesAccumulateChallenger="@{model.countTitles}"
                     android:textColor="@color/red"
                     android:textSize="18sp"
                     android:textStyle="bold" />
@@ -104,13 +110,14 @@
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
                     android:layout_below="@+id/tvAccumulateSteps"
+                    android:layout_centerInParent="true"
                     android:layout_marginStart="@dimen/dimen_4"
                     android:layout_marginTop="@dimen/dimen_4"
                     android:layout_marginEnd="@dimen/dimen_4"
                     android:layout_marginBottom="@dimen/dimen_4"
                     android:padding="@dimen/dimen_4"
                     app:layoutManager="androidx.recyclerview.widget.GridLayoutManager"
-                    app:spanCount="4" />
+                    app:spanCount="3" />
             </RelativeLayout>
 
         </LinearLayout>

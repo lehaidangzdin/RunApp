@@ -35,33 +35,11 @@ class WeekFragment : Fragment() {
     }
 
     private fun observerComponent() {
-//        viewModel.dataChartByWeekOfMonth.observe(viewLifecycleOwner) {
-//            if (it.lsBarEntry.size == 5) {
-//                displayChart(it.lsAxis, it.lsBarEntry)
-        displayChart(addLsAxis(), addLsBarEntry())
-//            }
-//        }
-    }
-
-    fun addLsAxis(): ArrayList<String> {
-        val ls = ArrayList<String>()
-        ls.add("07/11")
-        ls.add("14/11")
-        ls.add("21/11")
-        ls.add("28/11")
-        ls.add("29/11")
-
-        return ls
-    }
-
-    fun addLsBarEntry(): ArrayList<BarEntry> {
-        val ls = ArrayList<BarEntry>()
-        ls.add(BarEntry(0f, 0f))
-        ls.add(BarEntry(1f, 10000f))
-        ls.add(BarEntry(2f, 20000f))
-        ls.add(BarEntry(3f, 30000f))
-        ls.add(BarEntry(4f, 40000f))
-        return ls
+        viewModel.dataChartByWeekOfMonth.observe(viewLifecycleOwner) {
+            if (it.lsBarEntry.size == 5) {
+                displayChart(it.lsAxis, it.lsBarEntry)
+            }
+        }
     }
 
     private fun displayChart(

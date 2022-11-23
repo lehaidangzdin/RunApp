@@ -154,8 +154,8 @@
 
                         <ImageView
                             android:id="@+id/huyChuong1"
-                            android:layout_width="@dimen/dimen_30"
-                            android:layout_height="@dimen/dimen_30"
+                            android:layout_width="@dimen/dimen_40"
+                            android:layout_height="@dimen/dimen_40"
                             android:layout_centerVertical="true"
                             android:src="@drawable/huy_huong1" />
 
@@ -166,7 +166,7 @@
                             android:layout_toEndOf="@id/huyChuong1"
                             android:text="@string/recent_achieved_badge"
                             android:textColor="@color/red"
-                            android:textSize="16sp"
+                            android:textSize="20sp"
                             android:textStyle="bold" />
                     </RelativeLayout>
 

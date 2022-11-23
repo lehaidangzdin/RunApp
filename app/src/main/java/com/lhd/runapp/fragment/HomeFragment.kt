@@ -9,7 +9,6 @@ import android.view.ViewGroup
 import androidx.annotation.RequiresApi
 import androidx.fragment.app.Fragment
 import androidx.fragment.app.FragmentTransaction
-import androidx.fragment.app.activityViewModels
 import androidx.lifecycle.ViewModelProvider
 import com.google.android.material.tabs.TabLayout
 import com.lhd.runapp.R
@@ -129,9 +128,9 @@ class HomeFragment(private val goToReceive: HomeInterface) : Fragment() {
 
         lsAchieved.add(
             Challenger(
-                R.drawable.huy_chuong2,
+                R.drawable.huy_huong1,
                 "Spectacular Breakout",
-                "14/10/2022",
+                1669827600776,
                 "120",
                 "120"
             )
@@ -140,34 +139,7 @@ class HomeFragment(private val goToReceive: HomeInterface) : Fragment() {
             Challenger(
                 R.drawable.huy_huong1,
                 "October Challenger",
-                "09/10/2022",
-                "120",
-                "120"
-            )
-        )
-        lsAchieved.add(
-            Challenger(
-                R.drawable.huy_chuong3,
-                "Step to Mars ",
-                "04/10/2022",
-                "120",
-                "120"
-            )
-        )
-        lsAchieved.add(
-            Challenger(
-                R.drawable.huy_chuong4,
-                "August Challenger",
-                "14/08/2022",
-                "120",
-                "120"
-            )
-        )
-        lsAchieved.add(
-            Challenger(
-                R.drawable.huy_chuong2,
-                "Spectacular Breakout",
-                "14/10/2022",
+                1669827600776,
                 "120",
                 "120"
             )
@@ -175,26 +147,26 @@ class HomeFragment(private val goToReceive: HomeInterface) : Fragment() {
         lsAchieved.add(
             Challenger(
                 R.drawable.huy_huong1,
-                "October Challenger",
-                "09/10/2022",
-                "120",
-                "120"
-            )
-        )
-        lsAchieved.add(
-            Challenger(
-                R.drawable.huy_chuong3,
                 "Step to Mars ",
-                "04/10/2022",
+                1669827600776,
                 "120",
                 "120"
             )
         )
         lsAchieved.add(
             Challenger(
-                R.drawable.huy_chuong4,
+                R.drawable.huy_huong1,
                 "August Challenger",
-                "14/08/2022",
+                1669827600776,
+                "120",
+                "120"
+            )
+        )
+        lsAchieved.add(
+            Challenger(
+                R.drawable.huy_huong1,
+                "August Challenger",
+                1669827600776,
                 "120",
                 "120"
             )

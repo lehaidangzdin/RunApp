@@ -10,17 +10,17 @@
 
     <LinearLayout
         android:id="@+id/itemReceive"
-        android:layout_width="wrap_content"
+        android:layout_width="match_parent"
         android:layout_height="wrap_content"
+        android:layout_margin="@dimen/dimen_2"
         android:background="@color/bg_block"
         android:gravity="center"
         android:orientation="vertical"
-        android:padding="@dimen/dimen_2"
-        android:layout_margin="@dimen/dimen_2">
+        android:padding="@dimen/dimen_2">
 
         <ImageView
-            android:layout_width="@dimen/dimen_70"
-            android:layout_height="@dimen/dimen_70"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
             android:layout_gravity="center_horizontal"
             android:loadImage="@{item.img}"
             android:scaleType="centerInside"
@@ -33,7 +33,7 @@
             android:lines="2"
             android:text="@{item.name}"
             android:textColor="@color/txtColor3"
-            android:textSize="12sp"
+            android:textSize="16sp"
             android:textStyle="bold" />
 
         <TextView
@@ -42,7 +42,7 @@
             android:gravity="center_horizontal"
             android:showText="@{item}"
             android:textColor="@color/txtColor4"
-            android:textSize="12sp"
+            android:textSize="15sp"
             android:textStyle="bold" />
     </LinearLayout>
 </layout>

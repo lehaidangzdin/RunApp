@@ -16,12 +16,11 @@ import com.lhd.runapp.adapter.ReceiveAdapter
 import com.lhd.runapp.databinding.DialogBinding
 import com.lhd.runapp.databinding.FragmentReceiveBinding
 import com.lhd.runapp.models.Challenger
+import com.lhd.runapp.utils.Utils
 import com.lhd.runapp.viewmodel.HomeViewModel
 
 
 class ReceiveFragment : Fragment() {
-
-
     private var mBinding: FragmentReceiveBinding? = null
     private val binding get() = mBinding!!
     private var myAdapterMonthChallenger = ReceiveAdapter(arrayListOf(), 1)
@@ -34,10 +33,10 @@ class ReceiveFragment : Fragment() {
         inflater: LayoutInflater, container: ViewGroup?,
         savedInstanceState: Bundle?
     ): View {
-        mBinding = DataBindingUtil.inflate(
-            inflater, R.layout.fragment_receive, container, false
-        )
+        mBinding = FragmentReceiveBinding.inflate(inflater, container, false)
         viewModel = ViewModelProvider(requireActivity())[HomeViewModel::class.java]
+        mBinding!!.model = viewModel
+
         viewModel.getStepsByMonth()
         setUpRcv()
         observableComponent()
@@ -91,127 +90,6 @@ class ReceiveFragment : Fragment() {
         binding.btnClose.setOnClickListener { _ ->
             dialog?.dismiss()
         }
-
-
-    }
-
-    private fun addLsMonthChallenger(): ArrayList<Challenger> {
-        val lsChallenger = ArrayList<Challenger>()
-        lsChallenger.add(
-            Challenger(
-                R.drawable.huy_huong1,
-                "Thu thach thang 1",
-                "14/1/2022",
-                "120",
-                "120"
-            )
-        )
-        lsChallenger.add(
-            Challenger(
-                R.drawable.huy_huong1,
-                "Thu thach thang 2",
-                "14/1/2022",
-                "10",
-                "120"
-            )
-        )
-
-        lsChallenger.add(
-            Challenger(
-                R.drawable.huy_huong1,
-                "Thu thach thang 3",
-                "14/1/2022",
-                "120",
-                "120"
-            )
-        )
-        lsChallenger.add(
-            Challenger(
-                R.drawable.huy_huong1,
-                "Thu thach thang 4",
-                "14/1/2022",
-                "120",
-                "120"
-            )
-        )
-
-        lsChallenger.add(
-            Challenger(
-                R.drawable.huy_huong1,
-                "Thu thach thang 5",
-                "14/1/2022",
-                "120",
-                "120"
-            )
-        )
-        lsChallenger.add(
-            Challenger(
-                R.drawable.huy_huong1,
-                "Thu thach thang 6",
-                "14/1/2022",
-                "120",
-                "120"
-            )
-        )
-
-        lsChallenger.add(
-            Challenger(
-                R.drawable.huy_huong1,
-                "Thu thach thang 7",
-                "14/1/2022",
-                "120",
-                "120"
-            )
-        )
-        lsChallenger.add(
-            Challenger(
-                R.drawable.huy_huong1,
-                "Thu thach thang 8",
-                "14/1/2022",
-                "120",
-                "120"
-            )
-        )
-
-        lsChallenger.add(
-            Challenger(
-                R.drawable.huy_huong1,
-                "Thu thach thang 9",
-                "14/1/2022",
-                "120",
-                "120"
-            )
-        )
-        lsChallenger.add(
-            Challenger(
-                R.drawable.huy_huong1,
-                "Thu thach thang 10",
-                "14/1/2022",
-                "120",
-                "120"
-            )
-        )
-
-        lsChallenger.add(
-            Challenger(
-                R.drawable.huy_huong1,
-                "Thu thach thang 11",
-                "14/1/2022",
-                "120",
-                "120"
-            )
-        )
-        lsChallenger.add(
-            Challenger(
-                R.drawable.huy_huong1,
-                "Thu thach thang 12",
-                "14/1/2022",
-                "120",
-                "120"
-            )
-        )
-
-        return lsChallenger
     }
 
     private fun addLsAccumulatingSteps(): ArrayList<Challenger> {
@@ -219,8 +97,8 @@ class ReceiveFragment : Fragment() {
         lsAccumulatingSteps.add(
             Challenger(
                 R.drawable.huy_huong1,
-                "Khoi dau suon se",
-                "14/1/2022",
+                Utils.lsAccumulateChallenger[0],
+                0,
                 "20",
                 "120"
             )
@@ -228,8 +106,8 @@ class ReceiveFragment : Fragment() {
         lsAccumulatingSteps.add(
             Challenger(
                 R.drawable.huy_huong1,
-                "Kien tri luyen tap",
-                "14/1/2022",
+                Utils.lsAccumulateChallenger[1],
+                0,
                 "10",
                 "120"
             )
@@ -238,8 +116,8 @@ class ReceiveFragment : Fragment() {
         lsAccumulatingSteps.add(
             Challenger(
                 R.drawable.huy_huong1,
-                "Tich luy ben bi",
-                "14/1/2022",
+                Utils.lsAccumulateChallenger[2],
+                1669827600776,
                 "120",
                 "120"
             )
@@ -247,8 +125,8 @@ class ReceiveFragment : Fragment() {
         lsAccumulatingSteps.add(
             Challenger(
                 R.drawable.huy_huong1,
-                "But pha ngoan muc",
-                "14/1/2022",
+                Utils.lsAccumulateChallenger[3],
+                0,
                 "20",
                 "120"
             )
@@ -257,8 +135,8 @@ class ReceiveFragment : Fragment() {
         lsAccumulatingSteps.add(
             Challenger(
                 R.drawable.huy_huong1,
-                "Khong he lui buoc",
-                "14/1/2022",
+                Utils.lsAccumulateChallenger[4],
+                1669827600776,
                 "120",
                 "120"
             )
@@ -266,8 +144,8 @@ class ReceiveFragment : Fragment() {
         lsAccumulatingSteps.add(
             Challenger(
                 R.drawable.huy_huong1,
-                "Dua con than gio",
-                "14/1/2022",
+                Utils.lsAccumulateChallenger[5],
+                1669827600776,
                 "120",
                 "120"
             )
@@ -276,8 +154,8 @@ class ReceiveFragment : Fragment() {
         lsAccumulatingSteps.add(
             Challenger(
                 R.drawable.huy_huong1,
-                "Doi chan khong moi",
-                "14/1/2022",
+                Utils.lsAccumulateChallenger[6],
+                0,
                 "20",
                 "120"
             )
@@ -285,8 +163,8 @@ class ReceiveFragment : Fragment() {
         lsAccumulatingSteps.add(
             Challenger(
                 R.drawable.huy_huong1,
-                "Buoc toi mat trang",
-                "14/1/2022",
+                Utils.lsAccumulateChallenger[7],
+                1669827600776,
                 "120",
                 "120"
             )
@@ -295,8 +173,8 @@ class ReceiveFragment : Fragment() {
         lsAccumulatingSteps.add(
             Challenger(
                 R.drawable.huy_huong1,
-                "Buoc toi sao hoa",
-                "14/1/2022",
+                Utils.lsAccumulateChallenger[8],
+                0,
                 "10",
                 "120"
             )

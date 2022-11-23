@@ -101,7 +101,12 @@ class MySeekBar(context: Context, attrs: AttributeSet) : View(context, attrs) {
      * */
     private fun drawProgress(canvas: Canvas) {
         paint.color = progressColor
-        processWidth = (progress) * width
+        processWidth =
+            if (progress >= 1) {
+                width.toFloat()
+            } else {
+                (progress) * width
+            }
         drawCenteredBar(canvas, marginHorizontalProgress, processWidth)
     }
 

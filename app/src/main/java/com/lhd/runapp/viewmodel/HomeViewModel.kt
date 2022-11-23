@@ -25,7 +25,6 @@ import com.lhd.runapp.utils.Utils.getAccount
 import com.lhd.runapp.utils.Utils.getDailySteps
 import com.lhd.runapp.utils.Utils.getNameOfMonth
 import kotlinx.coroutines.*
-import java.text.SimpleDateFormat
 import java.util.*
 import kotlin.collections.ArrayList
 
@@ -38,16 +37,14 @@ class HomeViewModel(
     @SuppressLint("StaticFieldLeak")
     private val context = getApplication<Application>().applicationContext
     private val cal = Calendar.getInstance()
-    private val currentYear = cal[Calendar.YEAR]
-    private val currentMonth = cal[Calendar.MONTH] + 1
 
-    val process = MutableLiveData<Float>()
+    val countTitles = ObservableField(0)
+    val process = MutableLiveData(0f)
     val dataChartByWeek = MutableLiveData<DataChart>()
     val dataChartByWeekOfMonth = MutableLiveData<DataChart>()
     val dataChartByMonth = MutableLiveData<DataChart>()
     val lsMonthChallenger = MutableLiveData<ArrayList<Challenger>>()
     val isSignIn = MutableLiveData(false)
-
 
     fun setIsSignIn(isSignIn: Boolean) {
         this.isSignIn.value = isSignIn
@@ -55,11 +52,6 @@ class HomeViewModel(
 
     @RequiresApi(Build.VERSION_CODES.O)
     fun checkPermission(activity: Activity) {
-        process.value = 0f
-        Log.e(
-            TAG,
-            "checkPermission: ${GoogleSignIn.hasPermissions(getAccount(context), fitnessOptions)}"
-        )
         if (!GoogleSignIn.hasPermissions(getAccount(context), fitnessOptions)) {
             GoogleSignIn.requestPermissions(
                 activity,
@@ -96,7 +88,6 @@ class HomeViewModel(
         GlobalScope.launch(Dispatchers.Main) {
             val rawData = async { Utils.getData(context, startTime, endTime) }
             handleRawDataByDayOfWeek(rawData.await())
-//            Utils.getDailySteps(context)
         }
     }
 
@@ -122,9 +113,10 @@ class HomeViewModel(
 
     @OptIn(DelicateCoroutinesApi::class)
     fun getStepsByMonth() {
+        countTitles.set(0)
         val cal = Calendar.getInstance()
 
-        val daysInMonth = Utils.getNumOfMonth(currentYear, currentMonth)
+        val daysInMonth = Utils.getNumOfMonth(cal[Calendar.YEAR], cal[Calendar.MONTH] + 1)
         // lấy thời gian
         cal[Calendar.DATE] = 1
         cal[Calendar.MONTH] = 0
@@ -144,7 +136,6 @@ class HomeViewModel(
             val rawData = async { Utils.getData(context, startTimeReadRequest, endTimeReadRequest) }
             handleRawDataByMonth(rawData.await())
         }
-
     }
 
     private fun handleRawDataByMonth(lsRawData: ArrayList<RawData>) {
@@ -156,29 +147,32 @@ class HomeViewModel(
         var end = 0
         // loop 12 tháng để tính tổng steps từng tháng
         for (i in 1..12) {
-            val dayOfMonth = Utils.getNumOfMonth(currentYear, i)
+            val dayOfMonth = Utils.getNumOfMonth(cal[Calendar.YEAR], i)
             var totalMonth = 0f
             val time = Date(lsRawData[end].time).toString().substring(4, 7)
             end += dayOfMonth
             if (end >= lsRawData.size) {
                 end = lsRawData.size - 1
             }
+            var day: Long = 0
             // tính tổng số bước trong 1 tháng
             for (j in start..end) {
                 totalMonth += lsRawData[j].step
+                if (totalMonth >= MAX_MONTH && day == 0L) {
+                    day = lsRawData[j].time
+                }
             }
 
+            if (day != 0L) {
+                countTitles.set(countTitles.get()!! + 1)
+            }
             // add vào list
             lsAxis.add(time)
             lsBarEntry.add(BarEntry((i - 1).toFloat(), totalMonth))
             // add challenger
-            val icon = R.drawable.huy_chuong2
+            val icon = R.drawable.huy_huong1
             val title = "${getNameOfMonth(i).toString()} Challenger"
-            val day = if (totalMonth >= MAX_MONTH) {
-                Date(lsRawData[end].time).toString()
-            } else {
-                ""
-            }
+
             lsChallenger.add(
                 Challenger(
                     icon,
@@ -191,7 +185,7 @@ class HomeViewModel(
             //
             start = end + 1
         }
-        lsMonthChallenger.postValue(lsChallenger)
+        this.lsMonthChallenger.postValue(lsChallenger)
         dataChartByMonth.value = DataChart(lsAxis, lsBarEntry)
     }
 
@@ -201,8 +195,8 @@ class HomeViewModel(
         // lấy thời gian
         val cal = Calendar.getInstance()
 
-        val day = Utils.getNumOfMonth(cal[Calendar.YEAR], currentMonth)
-        Log.e(TAG, "getStepsByWeekOfMonth: ${day}")
+        val day = Utils.getNumOfMonth(cal[Calendar.YEAR], cal[Calendar.MONTH] + 1)
+        Log.e(TAG, "getStepsByWeekOfMonth: $day")
         cal[Calendar.DATE] = day
         cal[Calendar.HOUR_OF_DAY] = 0
         cal[Calendar.MINUTE] = 0
@@ -248,9 +242,6 @@ class HomeViewModel(
 
             start = day + 1
             day += 7
-        }
-        lsBarEntry.forEachIndexed { index, barEntry ->
-            Log.e(TAG, "handlerRawDataByWeekOfMonth: ${barEntry.y} --- ${lsAxis[index]}")
         }
         dataChartByWeekOfMonth.postValue(DataChart(lsAxis, lsBarEntry))
     }
