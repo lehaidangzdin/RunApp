@@ -20,7 +20,6 @@ import com.lhd.runapp.fragment.fragChart.DayFragment
 import com.lhd.runapp.fragment.fragChart.MonthFragment
 import com.lhd.runapp.fragment.fragChart.WeekFragment
 import com.lhd.runapp.interfacePresenter.HomeInterface
-import com.lhd.runapp.models.Challenger
 import com.lhd.runapp.viewmodel.HomeViewModel
 import kotlin.collections.ArrayList
 
@@ -45,10 +44,10 @@ class HomeFragment(private val goToReceive: HomeInterface) : Fragment() {
         viewModel.checkPermission(requireActivity())
         mBinding.homePresenter = viewModel
         //
-        observerComponent()
         setUpUI()
         setupMySeekBar()
         setUpRcv()
+        observerComponent()
         return mBinding.root
     }
 
@@ -56,6 +55,9 @@ class HomeFragment(private val goToReceive: HomeInterface) : Fragment() {
         viewModel.process.observe(viewLifecycleOwner) {
             mBinding.mySeekBar.progress = it / 4500f
             mBinding.numSteps.text = it.toString()
+        }
+        viewModel.challengerCollected.observe(viewLifecycleOwner) {
+            myAdapter.addData(it)
         }
     }
 
@@ -108,7 +110,6 @@ class HomeFragment(private val goToReceive: HomeInterface) : Fragment() {
     }
 
     private fun setUpRcv() {
-        myAdapter.addData(addLsReceive())
         mBinding.rcv.apply {
             adapter = myAdapter
             setHasFixedSize(true)
@@ -122,57 +123,6 @@ class HomeFragment(private val goToReceive: HomeInterface) : Fragment() {
         lsIconReceive.add(ReceiveSeekbar(R.drawable.reiceve3, false))
     }
 
-    private fun addLsReceive(): ArrayList<Challenger> {
-
-        val lsAchieved = ArrayList<Challenger>()
-
-        lsAchieved.add(
-            Challenger(
-                R.drawable.huy_huong1,
-                "Spectacular Breakout",
-                1669827600776,
-                "120",
-                "120"
-            )
-        )
-        lsAchieved.add(
-            Challenger(
-                R.drawable.huy_huong1,
-                "October Challenger",
-                1669827600776,
-                "120",
-                "120"
-            )
-        )
-        lsAchieved.add(
-            Challenger(
-                R.drawable.huy_huong1,
-                "Step to Mars ",
-                1669827600776,
-                "120",
-                "120"
-            )
-        )
-        lsAchieved.add(
-            Challenger(
-                R.drawable.huy_huong1,
-                "August Challenger",
-                1669827600776,
-                "120",
-                "120"
-            )
-        )
-        lsAchieved.add(
-            Challenger(
-                R.drawable.huy_huong1,
-                "August Challenger",
-                1669827600776,
-                "120",
-                "120"
-            )
-        )
-        return lsAchieved
-    }
 
     private fun setupTabLayout() {
         with(mBinding) {

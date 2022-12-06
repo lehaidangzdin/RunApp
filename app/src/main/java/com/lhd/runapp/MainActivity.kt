@@ -100,8 +100,7 @@ class MainActivity : AppCompatActivity(), HomeInterface {
     override fun onActivityResult(requestCode: Int, resultCode: Int, data: Intent?) {
         super.onActivityResult(requestCode, resultCode, data)
         if (requestCode == FitRequestCode.GG_FIT_REQUEST_CODE.ordinal) {
-            viewModel.setIsSignIn(true)
-            viewModel.getStepDaily()
+            viewModel.checkPermission(this)
             viewModel.subscribe()
         }
 

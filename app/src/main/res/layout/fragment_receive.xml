@@ -51,7 +51,7 @@
                     android:layout_marginTop="@dimen/dimen_4"
                     android:layout_marginEnd="@dimen/dimen_4"
                     android:layout_marginBottom="@dimen/dimen_4"
-                    android:countTitlesMonthChallenger="@{model.countTitles}"
+                    android:countTitlesMonthChallenger="@{model.countTitlesMonthCha}"
                     android:textColor="@color/red"
                     android:textSize="18sp"
                     android:textStyle="bold" />
@@ -100,7 +100,7 @@
                     android:layout_marginTop="@dimen/dimen_4"
                     android:layout_marginEnd="@dimen/dimen_4"
                     android:layout_marginBottom="@dimen/dimen_4"
-                    android:countTitlesAccumulateChallenger="@{model.countTitles}"
+                    android:countTitlesAccumulateChallenger="@{model.countTitlesAccumulateCha}"
                     android:textColor="@color/red"
                     android:textSize="18sp"
                     android:textStyle="bold" />

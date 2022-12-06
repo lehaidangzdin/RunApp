@@ -2,7 +2,6 @@ package com.lhd.runapp.fragment.fragChart
 
 import android.os.Build
 import android.os.Bundle
-import android.util.Log
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
@@ -36,9 +35,9 @@ class WeekFragment : Fragment() {
 
     private fun observerComponent() {
         viewModel.dataChartByWeekOfMonth.observe(viewLifecycleOwner) {
-            if (it.lsBarEntry.size == 5) {
+//            if (it.lsBarEntry.size == 5) {
                 displayChart(it.lsAxis, it.lsBarEntry)
-            }
+//            }
         }
     }
 

@@ -1,7 +1,6 @@
 package com.lhd.runapp.utils
 
 import android.annotation.SuppressLint
-import android.util.Log
 import android.widget.ImageView
 import android.widget.TextView
 import androidx.databinding.BindingAdapter

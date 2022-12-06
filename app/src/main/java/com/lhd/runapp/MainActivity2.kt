@@ -97,7 +97,6 @@ class MainActivity2 : AppCompatActivity() {
         lsBarEntry.add(BarEntry(3f, 3f))
         lsBarEntry.add(BarEntry(4f, 0f))
         lsBarEntry.add(BarEntry(5f, 0f))
-//        lsBarEntry.add(BarEntry(6f, 0f))
     }
 
 }

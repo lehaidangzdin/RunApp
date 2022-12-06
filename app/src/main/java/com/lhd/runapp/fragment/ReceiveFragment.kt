@@ -4,6 +4,7 @@ import android.app.Dialog
 import android.graphics.Color
 import android.graphics.drawable.ColorDrawable
 import android.os.Bundle
+import android.util.Log
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
@@ -16,7 +17,6 @@ import com.lhd.runapp.adapter.ReceiveAdapter
 import com.lhd.runapp.databinding.DialogBinding
 import com.lhd.runapp.databinding.FragmentReceiveBinding
 import com.lhd.runapp.models.Challenger
-import com.lhd.runapp.utils.Utils
 import com.lhd.runapp.viewmodel.HomeViewModel
 
 
@@ -25,7 +25,8 @@ class ReceiveFragment : Fragment() {
     private val binding get() = mBinding!!
     private var myAdapterMonthChallenger = ReceiveAdapter(arrayListOf(), 1)
     private var myAdapterAccumulatingSteps = ReceiveAdapter(arrayListOf(), 1)
-    private val lsChallenger = ArrayList<Challenger>()
+    private val lsMonthChallenger = ArrayList<Challenger>()
+    private val lsAccumulateCha = ArrayList<Challenger>()
 
     private lateinit var viewModel: HomeViewModel
 
@@ -36,8 +37,6 @@ class ReceiveFragment : Fragment() {
         mBinding = FragmentReceiveBinding.inflate(inflater, container, false)
         viewModel = ViewModelProvider(requireActivity())[HomeViewModel::class.java]
         mBinding!!.model = viewModel
-
-        viewModel.getStepsByMonth()
         setUpRcv()
         observableComponent()
         showAlertDialog()
@@ -46,8 +45,13 @@ class ReceiveFragment : Fragment() {
 
     private fun observableComponent() {
         viewModel.lsMonthChallenger.observe(viewLifecycleOwner) {
-            lsChallenger.addAll(it)
+            lsMonthChallenger.addAll(it)
             myAdapterMonthChallenger.addData(it)
+        }
+
+        viewModel.accumulateChallenger.observe(viewLifecycleOwner) {
+            lsAccumulateCha.addAll(it)
+            myAdapterAccumulatingSteps.addData(it)
         }
     }
 
@@ -61,7 +65,7 @@ class ReceiveFragment : Fragment() {
             adapter = myAdapterAccumulatingSteps
             setHasFixedSize(true)
         }
-        myAdapterAccumulatingSteps.addData(addLsAccumulatingSteps())
+//        myAdapterAccumulatingSteps.addData(addLsAccumulatingSteps())
     }
 
     private fun showAlertDialog() {
@@ -84,101 +88,11 @@ class ReceiveFragment : Fragment() {
         dialog?.setContentView(binding.root)
         dialog?.setCanceledOnTouchOutside(false)
         dialog?.show()
-        binding.btnShare.setOnClickListener { _ ->
+        binding.btnShare.setOnClickListener {
             dialog?.dismiss()
         }
-        binding.btnClose.setOnClickListener { _ ->
+        binding.btnClose.setOnClickListener {
             dialog?.dismiss()
         }
-    }
-
-    private fun addLsAccumulatingSteps(): ArrayList<Challenger> {
-        val lsAccumulatingSteps = ArrayList<Challenger>()
-        lsAccumulatingSteps.add(
-            Challenger(
-                R.drawable.huy_huong1,
-                Utils.lsAccumulateChallenger[0],
-                0,
-                "20",
-                "120"
-            )
-        )
-        lsAccumulatingSteps.add(
-            Challenger(
-                R.drawable.huy_huong1,
-                Utils.lsAccumulateChallenger[1],
-                0,
-                "10",
-                "120"
-            )
-        )
-
-        lsAccumulatingSteps.add(
-            Challenger(
-                R.drawable.huy_huong1,
-                Utils.lsAccumulateChallenger[2],
-                1669827600776,
-                "120",
-                "120"
-            )
-        )
-        lsAccumulatingSteps.add(
-            Challenger(
-                R.drawable.huy_huong1,
-                Utils.lsAccumulateChallenger[3],
-                0,
-                "20",
-                "120"
-            )
-        )
-
-        lsAccumulatingSteps.add(
-            Challenger(
-                R.drawable.huy_huong1,
-                Utils.lsAccumulateChallenger[4],
-                1669827600776,
-                "120",
-                "120"
-            )
-        )
-        lsAccumulatingSteps.add(
-            Challenger(
-                R.drawable.huy_huong1,
-                Utils.lsAccumulateChallenger[5],
-                1669827600776,
-                "120",
-                "120"
-            )
-        )
-
-        lsAccumulatingSteps.add(
-            Challenger(
-                R.drawable.huy_huong1,
-                Utils.lsAccumulateChallenger[6],
-                0,
-                "20",
-                "120"
-            )
-        )
-        lsAccumulatingSteps.add(
-            Challenger(
-                R.drawable.huy_huong1,
-                Utils.lsAccumulateChallenger[7],
-                1669827600776,
-                "120",
-                "120"
-            )
-        )
-
-        lsAccumulatingSteps.add(
-            Challenger(
-                R.drawable.huy_huong1,
-                Utils.lsAccumulateChallenger[8],
-                0,
-                "10",
-                "120"
-            )
-        )
-        return lsAccumulatingSteps
     }
 }

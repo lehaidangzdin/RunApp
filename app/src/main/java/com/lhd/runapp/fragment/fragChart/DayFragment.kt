@@ -7,10 +7,8 @@ import android.view.View
 import android.view.ViewGroup
 import androidx.annotation.RequiresApi
 import androidx.fragment.app.Fragment
-import androidx.fragment.app.activityViewModels
 import androidx.lifecycle.ViewModelProvider
 import com.github.mikephil.charting.data.BarEntry
-import com.google.android.gms.auth.api.signin.GoogleSignIn
 import com.lhd.runapp.customviews.SetupChart
 import com.lhd.runapp.databinding.FragmentDayBinding
 import com.lhd.runapp.utils.Utils
@@ -46,11 +44,11 @@ class DayFragment : Fragment() {
         viewModel.dataChartByWeek.observe(viewLifecycleOwner) {
             displayChart(it.lsAxis, it.lsBarEntry)
         }
-        viewModel.isSignIn.observe(viewLifecycleOwner) {
-            if (it) {
-                viewModel.getStepsByDayOfWeek()
-            }
-        }
+//        viewModel.isSignIn.observe(viewLifecycleOwner) {
+//            if (it) {
+//                viewModel.getStepsByDayOfWeek()
+//            }
+//        }
     }
 
     private fun displayChart(lsAxis: ArrayList<String>, lsBarEntries: ArrayList<BarEntry>) {

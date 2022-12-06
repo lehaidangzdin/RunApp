@@ -28,7 +28,7 @@ class MonthFragment : Fragment() {
         // Inflate the layout for this fragment
         mBinding = FragmentMonthBinding.inflate(inflater, container, false)
         viewModel = ViewModelProvider(requireActivity())[HomeViewModel::class.java]
-        viewModel.getStepsByMonth()
+//        viewModel.getStepsByMonth()
         observerComponent()
         return mBinding.root
     }

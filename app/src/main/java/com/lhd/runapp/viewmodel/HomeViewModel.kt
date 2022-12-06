@@ -9,24 +9,30 @@ import androidx.annotation.RequiresApi
 import androidx.databinding.ObservableField
 import androidx.lifecycle.AndroidViewModel
 import androidx.lifecycle.MutableLiveData
+import androidx.lifecycle.viewModelScope
 import com.github.mikephil.charting.data.BarEntry
 import com.google.android.gms.auth.api.signin.GoogleSignIn
 import com.google.android.gms.fitness.Fitness
 import com.google.android.gms.fitness.data.DataType
 import com.lhd.runapp.R
+import com.lhd.runapp.db.ChallengerDatabase
 import com.lhd.runapp.models.Challenger
 import com.lhd.runapp.models.DataChart
 import com.lhd.runapp.models.RawData
 import com.lhd.runapp.utils.FitRequestCode
 import com.lhd.runapp.utils.Utils
+import com.lhd.runapp.utils.Utils.ACCUMULATE_CHALLENGER
 import com.lhd.runapp.utils.Utils.MAX_MONTH
 import com.lhd.runapp.utils.Utils.fitnessOptions
 import com.lhd.runapp.utils.Utils.getAccount
 import com.lhd.runapp.utils.Utils.getDailySteps
 import com.lhd.runapp.utils.Utils.getNameOfMonth
-import kotlinx.coroutines.*
+import com.lhd.runapp.utils.Utils.lsAccumulateChallenger
+import kotlinx.coroutines.Dispatchers
+import kotlinx.coroutines.async
+import kotlinx.coroutines.launch
+import kotlinx.coroutines.withContext
 import java.util.*
-import kotlin.collections.ArrayList
 
 const val TAG = "HomePresenter"
 
@@ -36,19 +42,19 @@ class HomeViewModel(
 
     @SuppressLint("StaticFieldLeak")
     private val context = getApplication<Application>().applicationContext
+    private val dao by lazy { ChallengerDatabase.getInstanceDB(context).challengerDao }
     private val cal = Calendar.getInstance()
+    private val icon = R.drawable.huy_huong1
 
-    val countTitles = ObservableField(0)
+    val countTitlesMonthCha = ObservableField(0)
+    val countTitlesAccumulateCha = ObservableField(0)
     val process = MutableLiveData(0f)
     val dataChartByWeek = MutableLiveData<DataChart>()
     val dataChartByWeekOfMonth = MutableLiveData<DataChart>()
     val dataChartByMonth = MutableLiveData<DataChart>()
     val lsMonthChallenger = MutableLiveData<ArrayList<Challenger>>()
-    val isSignIn = MutableLiveData(false)
-
-    fun setIsSignIn(isSignIn: Boolean) {
-        this.isSignIn.value = isSignIn
-    }
+    val accumulateChallenger = MutableLiveData<ArrayList<Challenger>>()
+    val challengerCollected = MutableLiveData<ArrayList<Challenger>>()
 
     @RequiresApi(Build.VERSION_CODES.O)
     fun checkPermission(activity: Activity) {
@@ -60,15 +66,16 @@ class HomeViewModel(
                 fitnessOptions
             )
         } else {
-            setIsSignIn(true)
             getStepDaily()
+            getStepsByMonth()
+            getStepsByDayOfWeek()
+            getStepsByWeekOfMonth()
         }
     }
 
     @SuppressLint("SimpleDateFormat")
-    @OptIn(DelicateCoroutinesApi::class)
     @RequiresApi(Build.VERSION_CODES.O)
-    fun getStepsByDayOfWeek() {
+    fun getStepsByDayOfWeek() = viewModelScope.launch {
         val cal = Calendar.getInstance()
 
         cal[Calendar.HOUR_OF_DAY] = 0
@@ -85,18 +92,14 @@ class HomeViewModel(
         val startTime = cal.timeInMillis
 
         // lấy dữ liệu dùng coroutines xử lí bất đồng bộ khi lấy dữ liệu
-        GlobalScope.launch(Dispatchers.Main) {
-            val rawData = async { Utils.getData(context, startTime, endTime) }
-            handleRawDataByDayOfWeek(rawData.await())
-        }
+        val rawData = async { Utils.getData(context, startTime, endTime) }
+        handleRawDataByDayOfWeek(rawData.await())
     }
 
-    @OptIn(DelicateCoroutinesApi::class)
-    fun getStepDaily() {
-        GlobalScope.launch(Dispatchers.Main) {
-            val steps = async { getDailySteps(context) }
-            process.value = (steps.await()).toFloat()
-        }
+    private fun getStepDaily() = viewModelScope.launch {
+        val steps = async { getDailySteps(context) }
+        process.value = (steps.await()).toFloat()
+
     }
 
     private fun handleRawDataByDayOfWeek(lsRawData: ArrayList<RawData>) {
@@ -111,9 +114,8 @@ class HomeViewModel(
         dataChartByWeek.postValue(DataChart(lsXAxis, lsBarEntry))
     }
 
-    @OptIn(DelicateCoroutinesApi::class)
-    fun getStepsByMonth() {
-        countTitles.set(0)
+    private fun getStepsByMonth() = viewModelScope.launch {
+        countTitlesMonthCha.set(0)
         val cal = Calendar.getInstance()
 
         val daysInMonth = Utils.getNumOfMonth(cal[Calendar.YEAR], cal[Calendar.MONTH] + 1)
@@ -132,17 +134,17 @@ class HomeViewModel(
         cal[Calendar.SECOND] = 0
         val endTimeReadRequest = cal.timeInMillis
 
-        GlobalScope.launch(Dispatchers.Main) {
-            val rawData = async { Utils.getData(context, startTimeReadRequest, endTimeReadRequest) }
-            handleRawDataByMonth(rawData.await())
-        }
+        val rawData = async { Utils.getData(context, startTimeReadRequest, endTimeReadRequest) }
+        handleRawDataByMonth(rawData.await())
     }
 
     private fun handleRawDataByMonth(lsRawData: ArrayList<RawData>) {
         val lsAxis = ArrayList<String>()
         val lsBarEntry = ArrayList<BarEntry>()
         val lsChallenger = ArrayList<Challenger>()
-//        lsAxis.add("")
+        handlerAccumulateChallenger(lsRawData)
+//        getAllChallenger()
+
         var start = 0
         var end = 0
         // loop 12 tháng để tính tổng steps từng tháng
@@ -158,40 +160,39 @@ class HomeViewModel(
             // tính tổng số bước trong 1 tháng
             for (j in start..end) {
                 totalMonth += lsRawData[j].step
+
                 if (totalMonth >= MAX_MONTH && day == 0L) {
                     day = lsRawData[j].time
                 }
             }
 
             if (day != 0L) {
-                countTitles.set(countTitles.get()!! + 1)
+                countTitlesMonthCha.set(countTitlesMonthCha.get()!! + 1)
             }
             // add vào list
             lsAxis.add(time)
             lsBarEntry.add(BarEntry((i - 1).toFloat(), totalMonth))
-            // add challenger
-            val icon = R.drawable.huy_huong1
+
             val title = "${getNameOfMonth(i).toString()} Challenger"
 
+            // add challenger
             lsChallenger.add(
                 Challenger(
-                    icon,
-                    title,
-                    day,
-                    totalMonth.toInt().toString(),
-                    MAX_MONTH.toString()
+                    img = icon,
+                    name = title,
+                    date = day,
+                    progress = totalMonth,
+                    max = MAX_MONTH.toFloat()
                 )
             )
-            //
             start = end + 1
         }
-        this.lsMonthChallenger.postValue(lsChallenger)
+        lsMonthChallenger.postValue(lsChallenger)
         dataChartByMonth.value = DataChart(lsAxis, lsBarEntry)
     }
 
-    @OptIn(DelicateCoroutinesApi::class)
     @RequiresApi(Build.VERSION_CODES.O)
-    fun getStepsByWeekOfMonth() {
+    fun getStepsByWeekOfMonth() = viewModelScope.launch {
         // lấy thời gian
         val cal = Calendar.getInstance()
 
@@ -210,20 +211,18 @@ class HomeViewModel(
         val startTime = cal.timeInMillis
 
 
-        GlobalScope.launch(Dispatchers.Main) {
-            try {
-                val lsRawData = async { Utils.getData(context, startTime, endTime) }
-                handlerRawDataByWeekOfMonth(lsRawData.await())
-            } catch (e: Exception) {
-                Log.e(TAG, "getStepsByWeek: err :${e}")
-            }
+        try {
+            val lsRawData = async { Utils.getData(context, startTime, endTime) }
+            handlerRawDataByWeekOfMonth(lsRawData.await())
+        } catch (e: Exception) {
+            Log.e(TAG, "getStepsByWeek: err :${e}")
         }
+
     }
 
     private fun handlerRawDataByWeekOfMonth(lsRawData: ArrayList<RawData>) {
         val lsAxis = ArrayList<String>()
         val lsBarEntry = ArrayList<BarEntry>()
-
         var day = 6
         var start = 0
         // loop 1 tháng -> tổng từng tuần
@@ -239,11 +238,85 @@ class HomeViewModel(
             val time = Utils.convertTimeRequestToShort(lsRawData[start].time, lsRawData[day].time)
             lsAxis.add(time)
             lsBarEntry.add(BarEntry((i).toFloat(), totalWeek))
-
+            //
             start = day + 1
             day += 7
         }
         dataChartByWeekOfMonth.postValue(DataChart(lsAxis, lsBarEntry))
+    }
+
+    private fun handlerAccumulateChallenger(lsRawData: ArrayList<RawData>) = viewModelScope.launch {
+        var totalSteps = 0f
+        var i = 0
+        val date = arrayListOf<Long>()
+        val ls = ArrayList<Challenger>()
+
+        lsRawData.forEachIndexed { _, rawData ->
+            totalSteps += rawData.step
+            ACCUMULATE_CHALLENGER.forEachIndexed { index, fl ->
+                if (totalSteps >= fl) {
+                    i = index
+                    date.add(rawData.time)
+                }
+            }
+        }
+
+        for (j in 0..i) {
+            val cha = Challenger(
+                img = icon,
+                name = lsAccumulateChallenger[j],
+                date = date[j],
+                progress = ACCUMULATE_CHALLENGER[j],
+                max = ACCUMULATE_CHALLENGER[j]
+            )
+            ls.add(cha)
+
+            if (ls.size - 1 <= i) {
+                addDataAccumulateChallenger(cha)
+            }
+        }
+        countTitlesAccumulateCha.set(i + 1)
+        handlerListAccumulateSteps(totalSteps, ls)
+        challengerCollected.postValue(ls)
+    }
+
+    private fun handlerListAccumulateSteps(totalSteps: Float, ls: ArrayList<Challenger>) =
+        viewModelScope.launch {
+            val lsCha = ArrayList<Challenger>()
+            lsAccumulateChallenger.forEachIndexed { index, s ->
+                var dateCha = 0L
+                var progressCha = 0f
+                ls.forEach { challenger ->
+                    if (s == challenger.name) {
+                        dateCha = challenger.date
+                        progressCha = ACCUMULATE_CHALLENGER[index]
+                    } else {
+                        dateCha = challenger.date
+                        progressCha = totalSteps
+                    }
+                }
+                val cha = Challenger(
+                    img = icon,
+                    name = s,
+                    date = dateCha,
+                    progress = progressCha,
+                    max = ACCUMULATE_CHALLENGER[index]
+                )
+                lsCha.add(cha)
+            }
+            accumulateChallenger.postValue(lsCha)
+        }
+
+    private suspend fun addDataAccumulateChallenger(challenger: Challenger) {
+        return withContext(Dispatchers.IO) {
+            dao.insert(challenger)
+        }
+    }
+
+    private suspend fun getAllChallenger(): List<Challenger> {
+        return withContext(Dispatchers.IO) {
+            dao.getAll()
+        }
     }
 
     fun subscribe() {
@@ -259,4 +332,5 @@ class HomeViewModel(
                 }
             }
     }
+
 }
