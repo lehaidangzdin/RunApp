@@ -75,6 +75,7 @@ class SetupChart(
         if (getMaxValue(lsBarEntries) >= maxYValue) {
             maxValue = getMaxValue(lsBarEntries)
         }
+        // setup cot y ben trai
         barChart.axisLeft.apply {
             setDrawGridLines(false)
             setDrawAxisLine(false)

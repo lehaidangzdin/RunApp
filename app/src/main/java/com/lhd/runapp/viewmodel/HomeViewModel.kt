@@ -49,9 +49,11 @@ class HomeViewModel(
     val countTitlesMonthCha = ObservableField(0)
     val countTitlesAccumulateCha = ObservableField(0)
     val process = MutableLiveData(0f)
+
     val dataChartByWeek = MutableLiveData<DataChart>()
     val dataChartByWeekOfMonth = MutableLiveData<DataChart>()
     val dataChartByMonth = MutableLiveData<DataChart>()
+
     val lsMonthChallenger = MutableLiveData<ArrayList<Challenger>>()
     val accumulateChallenger = MutableLiveData<ArrayList<Challenger>>()
     val challengerCollected = MutableLiveData<ArrayList<Challenger>>()

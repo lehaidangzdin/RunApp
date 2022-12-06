@@ -29,15 +29,14 @@ class WeekFragment : Fragment() {
         viewModel = ViewModelProvider(requireActivity())[HomeViewModel::class.java]
         viewModel.getStepsByWeekOfMonth()
         observerComponent()
-
         return mBinding.root
     }
 
     private fun observerComponent() {
         viewModel.dataChartByWeekOfMonth.observe(viewLifecycleOwner) {
-//            if (it.lsBarEntry.size == 5) {
+            if (it.lsBarEntry.size == 5) {
                 displayChart(it.lsAxis, it.lsBarEntry)
-//            }
+            }
         }
     }
 
@@ -45,6 +44,9 @@ class WeekFragment : Fragment() {
         lsAxis: ArrayList<String>,
         lsBarEntries: ArrayList<BarEntry>
     ) {
+        lsAxis.add("")
+        lsBarEntries.add(BarEntry(5f, null))
+
         SetupChart(context, mBinding.barChart, lsBarEntries, lsAxis, Utils.MAX_WEEK.toFloat())
             .applyOptions()
     }
