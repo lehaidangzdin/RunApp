@@ -32,6 +32,7 @@ import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.async
 import kotlinx.coroutines.launch
 import kotlinx.coroutines.withContext
+import java.time.LocalDate
 import java.util.*
 
 const val TAG = "HomePresenter"
@@ -263,23 +264,47 @@ class HomeViewModel(
             }
         }
 
-        for (j in 0..i) {
-            val cha = Challenger(
-                img = icon,
-                name = lsAccumulateChallenger[j],
-                date = date[j],
-                progress = ACCUMULATE_CHALLENGER[j],
-                max = ACCUMULATE_CHALLENGER[j]
-            )
-            ls.add(cha)
+        Log.e(TAG, "handlerAccumulateChallenger: $i")
+        if (i > 0) {
+            for (j in 0..i) {
+                val cha = Challenger(
+                    img = icon,
+                    name = lsAccumulateChallenger[j],
+                    date = date[j],
+                    progress = ACCUMULATE_CHALLENGER[j],
+                    max = ACCUMULATE_CHALLENGER[j]
+                )
+                ls.add(cha)
 
-            if (ls.size - 1 <= i) {
-                addDataAccumulateChallenger(cha)
+                if (ls.size - 1 <= i) {
+                    addDataAccumulateChallenger(cha)
+                }
             }
+
+            countTitlesAccumulateCha.set(i + 1)
+            handlerListAccumulateSteps(totalSteps, ls)
+            challengerCollected.postValue(ls)
+        } else {
+//            for (j in 0..i) {
+            ACCUMULATE_CHALLENGER.forEachIndexed { index, fl ->
+                val cha = Challenger(
+                    img = icon,
+                    name = lsAccumulateChallenger[index],
+                    date = cal.timeInMillis,
+                    progress = 0f,
+                    max = fl
+                )
+                ls.add(cha)
+            }
+
+//                if (ls.size - 1 <= i) {
+//                    addDataAccumulateChallenger(cha)
+//                }
+//            }
+            countTitlesAccumulateCha.set(i + 1)
+            handlerListAccumulateSteps(totalSteps, ls)
+            challengerCollected.postValue(ls)
         }
-        countTitlesAccumulateCha.set(i + 1)
-        handlerListAccumulateSteps(totalSteps, ls)
-        challengerCollected.postValue(ls)
     }
 
     private fun handlerListAccumulateSteps(totalSteps: Float, ls: ArrayList<Challenger>) =

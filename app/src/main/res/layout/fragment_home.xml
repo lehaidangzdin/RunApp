@@ -23,7 +23,7 @@
             <!--info block-->
             <ImageView
                 android:layout_width="match_parent"
-                android:layout_height="@dimen/dimen_300"
+                android:layout_height="@dimen/dimen_260"
                 android:scaleType="fitXY"
                 android:src="@drawable/image_bg" />
 
@@ -166,7 +166,7 @@
                             android:layout_toEndOf="@id/huyChuong1"
                             android:text="@string/recent_achieved_badge"
                             android:textColor="@color/red"
-                            android:textSize="20sp"
+                            android:textSize="16sp"
                             android:textStyle="bold" />
                     </RelativeLayout>
 
